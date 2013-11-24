@@ -11,6 +11,8 @@ import org.newdawn.slick.Graphics;
  * @author Daniel Rolandi
  */
 public class Block {
+  public static final Color border = new Color(255, 255, 255);
+  
   private TetrominoType type;
   private float x;
   private float y;
@@ -30,9 +32,9 @@ public class Block {
    * @param g Graphics context.
    */
   public void render(GameContainer gc, Graphics g){
-    g.setColor( BlockColor.color.get(type) );
+    g.setColor( TetrominoType.getColor(type) );
     g.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
-    g.setColor( BlockColor.border );
+    g.setColor( border );
     g.drawRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
   }
   

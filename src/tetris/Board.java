@@ -25,7 +25,8 @@ public class Board {
   
   private GameContainer gc;
   private Block[][] grid;
-  private int debugCounter = 0;
+  private Tetromino currentTetromino;
+  private TetrominoType nextTetrominoType;
   
   public Board(GameContainer gc){
     this.gc = gc;    
