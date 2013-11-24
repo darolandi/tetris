@@ -9,8 +9,8 @@ import org.newdawn.slick.geom.Point;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * Defines the board area where Blocks are contained.
@@ -32,8 +32,9 @@ public class Board {
   
   public boolean debugMode = false;
   
-  private static final float NEXT_TETRO_OFFSETX = GAME_OFFSETX*2 + WIDTH*BLOCK_SIZE;
-  private static final float NEXT_TETRO_OFFSETY = GAME_OFFSETY;
+  public static final float NEXT_TETRO_OFFSETX = GAME_OFFSETX*2 + WIDTH*BLOCK_SIZE;
+  public static final float NEXT_TETRO_OFFSETY = GAME_OFFSETY;
+  public static final float NEXT_TETRO_SIZE = 6 * BLOCK_SIZE;
   private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
   private static final Color NEXT_TETRO_BORDER = GAME_BORDER;    
   
@@ -42,6 +43,7 @@ public class Board {
   private Tetromino currentTetro;
   private Tetromino nextTetro;
   private ArrayDeque<TetrominoType> nextTypes;
+  private ScoreKeeper scoreKeeper;
   
   
   /**
@@ -78,7 +80,9 @@ public class Board {
     grid = new Block[HEIGHT][WIDTH];
     currentTetro = null;
     nextTypes = new ArrayDeque<>(8);
+    scoreKeeper = new ScoreKeeper();
     selectNextTetro();
+    
   }  
   
   private void spawnTetromino(){
@@ -93,7 +97,6 @@ public class Board {
   }
   
   private void selectNextTetro(){    
-//    TetrominoInfo type = TetrominoInfo.getRandom();
     TetrominoType type = getNextTetroType();
     Point spawnPoint = TetrominoInfo.getSpawnPoint( type );
     float spawnX = spawnPoint.getX();
@@ -106,12 +109,15 @@ public class Board {
   
   private TetrominoType getNextTetroType(){
     if( nextTypes.isEmpty() ){
-      getNewBag();
+//      refillNextTypes();
+      nextTypes.add(TetrominoType.I);
+      nextTypes.add(TetrominoType.I);
+      nextTypes.add(TetrominoType.O);
     }
     return nextTypes.removeLast();    
   }
   
-  private void getNewBag(){
+  private void refillNextTypes(){
     ArrayList<TetrominoType> newBag = new ArrayList<>(7);
     for(TetrominoType type : TetrominoType.values() ){
       newBag.add(type);
@@ -142,10 +148,56 @@ public class Board {
     // if not possible, call thud()
   }
   
-  // current playing Tetromino reaches floor
+  // current playing Tetromino reaches stop
   private void thud(){
-    // check for clearing
+//    checkDefeat();
+    attemptClearRows();
     spawnTetromino();
+  }
+  
+  private void attemptClearRows(){
+    boolean didClearRow;
+    HashSet<Integer> clearedRows = new HashSet<>(5);    
+    int row = HEIGHT-1;    
+    
+    while(row >= HEIGHT_WAITING){
+      
+      didClearRow = true;
+      for(int col = 0; col < WIDTH; col++){
+        if(grid[row][col] == null){
+          didClearRow = false;
+          break;
+        }
+      }
+      if(didClearRow){
+        clearedRows.add(row);
+      }
+      row--;
+    }
+    
+    if(clearedRows.size() > 0){
+      clearRows( clearedRows );
+      scoreKeeper.clearedRows( clearedRows.size() );
+    }
+  }
+  
+  private void clearRows(HashSet<Integer> clearedRows){
+    // Blocks far above can get removed several times
+    // but the optimal algorithm is not worth the time right now
+    for(Integer row : clearedRows){
+      dropDownRowsAt(row);
+    }        
+  }
+  
+  private void dropDownRowsAt(int startRow){
+    // would be much more efficient if we could
+    // store the max height of the Tetris tower
+    // and only loop that much
+    for(int row = startRow; row >= 1; row--){
+      Block[] blockRowTo = grid[row];
+      Block[] blockRowFrom = grid[row - 1];
+      System.arraycopy(blockRowFrom, 0, blockRowTo, 0, WIDTH);
+    }
   }
   
   /**
@@ -157,6 +209,7 @@ public class Board {
     renderGameField(gc, g);
     renderNextTetroField(gc, g);
     renderTetromino(gc, g);
+    scoreKeeper.render(gc, g);
     
     if(debugMode){
       renderMouse(gc, g);
@@ -172,9 +225,9 @@ public class Board {
   
   private void renderNextTetroField(GameContainer gc, Graphics g){
     g.setColor( NEXT_TETRO_BACKGROUND );
-    g.fillRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
+    g.fillRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
     g.setColor( NEXT_TETRO_BORDER );
-    g.drawRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
+    g.drawRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
   }    
   
   private void renderTetromino(GameContainer gc, Graphics g){
