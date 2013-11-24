@@ -35,11 +35,15 @@ public class Block {
    * @param gc Game Container.
    * @param g Graphics context.
    */
-  public void render(GameContainer gc, Graphics g){    
-    g.setColor( TetrominoInfo.getColor(type) );
-    g.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
-    g.setColor( border );
-    g.drawRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
+  public void render(GameContainer gc, Graphics g){
+    if(Board.BLOCK_SIZE != 20){
+      g.setColor( TetrominoInfo.getColor(type) );
+      g.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
+      g.setColor( border );
+      g.drawRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
+    }else{
+      g.drawImage(TetrominoInfo.getImage(type), x, y);
+    }    
   }
   
   /**

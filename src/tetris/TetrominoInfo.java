@@ -1,7 +1,9 @@
 package tetris;
 
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.SlickException;
 
 /**
  * Contains various data for each Tetromino type.
@@ -15,8 +17,29 @@ public class TetrominoInfo {
   private static final Color Scolor = new Color(0, 255, 0);
   private static final Color Ocolor = new Color(255, 255, 0);
   private static final Color Tcolor = new Color(255, 0, 255);
-  private static final Color Lcolor = new Color(255, 180, 0);
+  private static final Color Lcolor = new Color(255, 127, 0);
   private static final Color Jcolor = new Color(0, 0, 255);
+  
+  private static final Image Iimage;
+  private static final Image Zimage;
+  private static final Image Simage;
+  private static final Image Oimage;
+  private static final Image Timage;
+  private static final Image Limage;
+  private static final Image Jimage;
+  static{
+    try{
+      Iimage = new Image("images/I.png");
+      Zimage = new Image("images/Z.png");
+      Simage = new Image("images/S.png");
+      Oimage = new Image("images/O.png");
+      Timage = new Image("images/T.png");
+      Limage = new Image("images/L.png");
+      Jimage = new Image("images/J.png");      
+    }catch(SlickException e){
+      throw new IllegalStateException("Could not load images.");
+    }
+  }
     
   private static final Point point44 = new Point(4, 4);
   private static final Point[][] allPoints;  
@@ -98,6 +121,25 @@ public class TetrominoInfo {
       case T: return Tcolor;
       case L: return Lcolor;
       case J: return Jcolor;
+      default: throw new IllegalArgumentException();
+    }
+  }
+  
+  /**
+   * Returns Block Image for that Tetromino type
+   * 
+   * @param type Tetromino Type
+   * @return Block Image for that Tetromino type
+   */
+  public static Image getImage(TetrominoType type){
+    switch(type){
+      case I: return Iimage;
+      case Z: return Zimage;
+      case S: return Simage;
+      case O: return Oimage;
+      case T: return Timage;
+      case L: return Limage;
+      case J: return Jimage;
       default: throw new IllegalArgumentException();
     }
   }

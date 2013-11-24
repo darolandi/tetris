@@ -33,6 +33,8 @@ public class Control implements InputProviderListener{
       board.hardDrop();
     }else if( command.equals(Commands.newGame) ){
       board.newGame();
+    }else if( command.equals(Commands.endGame) ){
+      board.endGame();
     }else if( command.equals(Commands.rotateLeft) ){
       board.rotateLeft();
     }else if( command.equals(Commands.rotateRight) ){

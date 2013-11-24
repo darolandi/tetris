@@ -76,9 +76,10 @@ public class Tetris extends BasicGame{
     g.drawString("Z; Rotate CCW", Offsets.HELP_X, Offsets.HELP_Y + 5*Offsets.NEWLINE);
     g.drawString("X/up; Rotate CW", Offsets.HELP_X, Offsets.HELP_Y + 6*Offsets.NEWLINE);
     g.drawString("F1; New Game", Offsets.HELP_X, Offsets.HELP_Y + 7*Offsets.NEWLINE);
-    g.drawString("ESC; Toggle Debug Mode", Offsets.HELP_X, Offsets.HELP_Y + 8*Offsets.NEWLINE);
-    g.drawString("G; Dump Grid (debug only)", Offsets.HELP_X, Offsets.HELP_Y + 9*Offsets.NEWLINE);
-    g.drawString("M; Toggle mute/unmute BGM", Offsets.HELP_X, Offsets.HELP_Y + 10*Offsets.NEWLINE);        
+    g.drawString("F2; End Game", Offsets.HELP_X, Offsets.HELP_Y + 8*Offsets.NEWLINE);
+    g.drawString("ESC; Toggle Debug Mode", Offsets.HELP_X, Offsets.HELP_Y + 9*Offsets.NEWLINE);
+    g.drawString("G; Dump Grid (debug only)", Offsets.HELP_X, Offsets.HELP_Y + 10*Offsets.NEWLINE);
+    g.drawString("M; Toggle mute/unmute BGM", Offsets.HELP_X, Offsets.HELP_Y + 11*Offsets.NEWLINE);        
   }
   
   /**

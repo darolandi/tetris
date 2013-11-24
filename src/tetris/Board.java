@@ -27,23 +27,26 @@ public class Board {
   
   private static final Color GAME_BACKGROUND = new Color(0, 0, 0);
   private static final Color GAME_BORDER = new Color(255, 255, 255);
+  private static final Color WIRE_COLOR = new Color(30, 30, 30);
   
-  public static final int BLOCK_SIZE = 20; // pixels      
-  public static final float NEXT_TETRO_SIZE = 6 * BLOCK_SIZE;
+  public static final int BLOCK_SIZE = 20; // pixels
+  private static final int NEXT_TETRO_PIXELS = 6;
+  public static final float NEXT_TETRO_SIZE = NEXT_TETRO_PIXELS * BLOCK_SIZE;
   private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
   private static final Color NEXT_TETRO_BORDER = GAME_BORDER;
   private static final Music bgm;
   static{
     try{
-      bgm = new Music("Tetris.ogg");
+      bgm = new Music("music/Tetris.ogg");
     }catch(SlickException e){
-      throw new IllegalStateException();
+      throw new IllegalStateException("Could not load music.");
     }
   }
   
-  private static final int BASE_LOCK_DELAY = 1000;
-  private static final int LOCK_DELAY_DECREMENT_PER_LEVEL = 50;
-  private static final int CLEARS_PER_LEVEL = 4;  
+  private static final int BASE_LOCK_DELAY = 800;
+  private static final int MIN_LOCK_DELAY = 100;
+  private static final int LOCK_DELAY_DECREMENT_PER_LEVEL = 120;
+  private static final int CLEARS_PER_LEVEL = 2;  
   
   private static int lockDelay; // milliseconds
   private int lockCounter; // milliseconds
@@ -76,6 +79,13 @@ public class Board {
     defeat();
   }
   
+  /**
+   * Forces game over at this exact movement.
+   */
+  public void endGame(){
+    defeat();
+  }
+  
   private void setupControl(){
     InputProvider provider = new InputProvider( gc.getInput() );   
     provider.addListener( new Control(this) );
@@ -90,6 +100,7 @@ public class Board {
     provider.bindCommand( Commands.rotateRightKey2, Commands.rotateRight);
     
     provider.bindCommand( Commands.newGameKey, Commands.newGame);
+    provider.bindCommand( Commands.endGameKey, Commands.endGame);
     provider.bindCommand( Commands.debugModeKey, Commands.debugMode);
     provider.bindCommand( Commands.dumpGridKey, Commands.dumpGrid);
     provider.bindCommand( Commands.toggleMusicKey, Commands.toggleMusic );
@@ -107,8 +118,7 @@ public class Board {
     scoreKeeper = new ScoreKeeper();
     clearCounter = 0;
     isDefeat = false;
-    selectNextTetro();
-    
+    selectNextTetro();    
   }  
   
   private void spawnTetromino(){
@@ -223,7 +233,7 @@ public class Board {
       if(clearCounter >= CLEARS_PER_LEVEL){
         int levelIncrease = clearCounter/CLEARS_PER_LEVEL;
         scoreKeeper.levelUp( levelIncrease );
-        lockDelay -= LOCK_DELAY_DECREMENT_PER_LEVEL * levelIncrease;
+        lockDelay = Math.max(MIN_LOCK_DELAY, lockDelay - LOCK_DELAY_DECREMENT_PER_LEVEL * levelIncrease);
         clearCounter %= CLEARS_PER_LEVEL;        
       }
     }
@@ -282,8 +292,9 @@ public class Board {
    */
   public void render(GameContainer gc, Graphics g){
     renderGameField(gc, g);
-    renderNextTetroField(gc, g);
+    renderNextTetroField(gc, g);    
     renderTetromino(gc, g);
+    renderGameFieldBorder(gc, g);
     scoreKeeper.render(gc, g);
     
     if(isDefeat){
@@ -291,22 +302,54 @@ public class Board {
     }
     if(debugMode){
       renderMouse(gc, g);
+      renderLockDelay(gc, g);
     }
   }    
       
   private void renderGameField(GameContainer gc, Graphics g){
     g.setColor( GAME_BACKGROUND );
     g.fillRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
+    renderGameWires(gc, g);    
+  }    
+          
+  private void renderGameWires(GameContainer gc, Graphics g){
+    float temp;
+    g.setColor( WIRE_COLOR );    
+    for(int row = 1; row < HEIGHT_GAME; row++){
+      temp = Offsets.GAME_Y + row*BLOCK_SIZE;
+      g.drawLine( Offsets.GAME_X, temp, Offsets.GAME_X + WIDTH*BLOCK_SIZE, temp);
+    }
+    for(int col = 1; col < WIDTH; col++){
+      temp = Offsets.GAME_X + col*BLOCK_SIZE;
+      g.drawLine( temp, Offsets.GAME_Y, temp, Offsets.GAME_Y + HEIGHT_GAME*BLOCK_SIZE);
+    }
+  }
+  
+  private void renderGameFieldBorder(GameContainer gc, Graphics g){
     g.setColor( GAME_BORDER );
     g.drawRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
-  }    
+  }
   
   private void renderNextTetroField(GameContainer gc, Graphics g){
     g.setColor( NEXT_TETRO_BACKGROUND );
     g.fillRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
+    renderNextTetroWires(gc, g);
     g.setColor( NEXT_TETRO_BORDER );
     g.drawRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
   }    
+  
+  private void renderNextTetroWires(GameContainer gc, Graphics g){
+    float temp;
+    g.setColor( WIRE_COLOR );    
+    for(int row = 1; row < NEXT_TETRO_PIXELS; row++){
+      temp = Offsets.NEXT_TETRO_Y + row*BLOCK_SIZE;
+      g.drawLine( Offsets.NEXT_TETRO_X, temp, Offsets.NEXT_TETRO_X + NEXT_TETRO_SIZE, temp);
+    }
+    for(int col = 1; col < NEXT_TETRO_PIXELS; col++){
+      temp = Offsets.NEXT_TETRO_X + col*BLOCK_SIZE;
+      g.drawLine( temp, Offsets.NEXT_TETRO_Y, temp, Offsets.NEXT_TETRO_Y + NEXT_TETRO_SIZE);
+    }
+  }
   
   private void renderTetromino(GameContainer gc, Graphics g){
     nextTetro.render(gc, g);    
@@ -329,8 +372,13 @@ public class Board {
   
   private void renderMouse(GameContainer gc, Graphics g){
     Input input = gc.getInput();
-    g.setColor( Color.white);
-    g.drawString(input.getMouseX() + ", " + input.getMouseY(), Offsets.MOUSE_X, Offsets.MOUSE_Y);
+    g.setColor( Color.white );
+    g.drawString("Mouse: " + input.getMouseX() + ", " + input.getMouseY(), Offsets.MOUSE_X, Offsets.MOUSE_Y);
+  }
+  
+  private void renderLockDelay(GameContainer gc, Graphics g){
+    g.setColor( Color.white );
+    g.drawString("Lock Delay: " + lockDelay, Offsets.MOUSE_X, Offsets.MOUSE_Y + Offsets.NEWLINE);
   }
   
   /**
