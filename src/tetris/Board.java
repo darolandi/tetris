@@ -41,7 +41,7 @@ public class Board {
   private Block[][] grid;
   private Tetromino currentTetro;
   private Tetromino nextTetro;
-  private ArrayDeque<TetrominoInfo> nextTypes;
+  private ArrayDeque<TetrominoType> nextTypes;
   
   
   /**
@@ -94,7 +94,7 @@ public class Board {
   
   private void selectNextTetro(){    
 //    TetrominoInfo type = TetrominoInfo.getRandom();
-    TetrominoInfo type = getNextTetroType();
+    TetrominoType type = getNextTetroType();
     Point spawnPoint = TetrominoInfo.getSpawnPoint( type );
     float spawnX = spawnPoint.getX();
     float spawnY = spawnPoint.getY();
@@ -104,7 +104,7 @@ public class Board {
             NEXT_TETRO_OFFSETY + (spawnY-1)*BLOCK_SIZE );
   }
   
-  private TetrominoInfo getNextTetroType(){
+  private TetrominoType getNextTetroType(){
     if( nextTypes.isEmpty() ){
       getNewBag();
     }
@@ -112,12 +112,12 @@ public class Board {
   }
   
   private void getNewBag(){
-    ArrayList<TetrominoInfo> newBag = new ArrayList<>(7);
-    for(TetrominoInfo type : TetrominoInfo.values() ){
+    ArrayList<TetrominoType> newBag = new ArrayList<>(7);
+    for(TetrominoType type : TetrominoType.values() ){
       newBag.add(type);
     }
     Collections.shuffle(newBag);
-    for(TetrominoInfo type : newBag){
+    for(TetrominoType type : newBag){
       nextTypes.addLast(type);
     }
   }

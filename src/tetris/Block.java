@@ -13,7 +13,7 @@ import org.newdawn.slick.Graphics;
 public class Block {
   public static final Color border = new Color(255, 255, 255);    
   
-  private TetrominoInfo type;
+  private TetrominoType type;
   public float x;
   public float y;
   
@@ -23,7 +23,7 @@ public class Block {
    * @param x X coordinate of topleft oorner.
    * @param y Y coordinate of topleft corner.
    */
-  public Block(TetrominoInfo type, float x, float y){
+  public Block(TetrominoType type, float x, float y){
     this.type = type;
     this.x = x;
     this.y = y;

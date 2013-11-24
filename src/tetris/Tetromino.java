@@ -17,13 +17,13 @@ import org.newdawn.slick.geom.Point;
  * @author Daniel Rolandi
  */
 public class Tetromino {
-  private TetrominoInfo type;
+  private TetrominoType type;
   private Block[] blocks;
   private float refX;
   private float refY;
   private int state;
   
-  public Tetromino(TetrominoInfo type, float x, float y){
+  public Tetromino(TetrominoType type, float x, float y){
     this.type = type;
     refX = x;
     refY = y;    
