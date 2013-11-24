@@ -126,8 +126,7 @@ public class Tetromino {
   
   // expected to be called during move-to-spawn
   private void syncGrid(Block[][] grid){
-    // loop unrolling for performance
-    System.out.println(blocks[0].y + " and " + blocks[0].getGridY());
+    // loop unrolling for performance    
     grid[ (int)blocks[0].getGridY() ][ (int)blocks[0].getGridX() ] = blocks[0];
     grid[ (int)blocks[1].getGridY() ][ (int)blocks[1].getGridX() ] = blocks[1];
     grid[ (int)blocks[2].getGridY() ][ (int)blocks[2].getGridX() ] = blocks[2];

@@ -65,6 +65,7 @@ public class Board {
     
     provider.bindCommand( Commands.newGameKey, Commands.newGame);
     provider.bindCommand( Commands.debugModeKey, Commands.debugMode);
+    provider.bindCommand( Commands.dumpGridKey, Commands.dumpGrid);
   }
   
   private void newGame(){
@@ -113,6 +114,8 @@ public class Board {
     }else if( canMoveDown() ){
       // notice redundant canMoveDown() call
       moveDown();      
+    }else{
+      thud();
     }    
     // if not possible, call thud()
   }
@@ -120,7 +123,7 @@ public class Board {
   // current playing Tetromino reaches floor
   private void thud(){
     // check for clearing
-    // spawn next Tetromino
+    spawnTetromino();
   }
   
   /**
@@ -201,7 +204,11 @@ public class Board {
     currentTetro.moveDown();
   }
   
-  private boolean canMoveDown(){    
+  private boolean canMoveDown(){
+    if(currentTetro == null){
+      return false;
+    }
+    
     // loop unrolling for performance
     Block tempBlock = currentTetro.getBlock(0);
     int targetRow = (int)tempBlock.getGridY() +1;
@@ -209,7 +216,7 @@ public class Board {
       return false;
     }
     Block targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -219,7 +226,7 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -229,7 +236,7 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -239,7 +246,7 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -276,6 +283,10 @@ public class Board {
   }
   
   private boolean canMoveLeft(){
+    if(currentTetro == null){
+      return false;
+    }
+    
     // loop unrolling for performance
     Block tempBlock = currentTetro.getBlock(0);
     int targetCol = (int)tempBlock.getGridX() -1;
@@ -283,7 +294,7 @@ public class Board {
       return false;
     }
     Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -293,7 +304,7 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -303,7 +314,7 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -313,7 +324,7 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -350,6 +361,10 @@ public class Board {
   }
   
   private boolean canMoveRight(){
+    if(currentTetro == null){
+      return false;
+    }
+    
     // loop unrolling for performance
     Block tempBlock = currentTetro.getBlock(0);
     int targetCol = (int)tempBlock.getGridX() +1;
@@ -357,7 +372,7 @@ public class Board {
       return false;
     }
     Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -367,7 +382,7 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -377,7 +392,7 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
@@ -387,11 +402,24 @@ public class Board {
       return false;
     }
     targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
-    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+    if(targetBlock != null && !currentTetro.hasBlock(targetBlock) ){
       return false;
     }
     
     return true;
+  }
+  
+  /**
+   * Dumps the contents of the grid for debugging.
+   */
+  public void dumpGrid(){
+    for(int row = 0; row < HEIGHT; row++){
+      System.out.print(row + "\t");
+      for(int col= 0; col < WIDTH;col++){
+        System.out.print( ( grid[row][col] == null) ? "0" : "#" );
+      }
+      System.out.println();
+    }
   }
   
 }

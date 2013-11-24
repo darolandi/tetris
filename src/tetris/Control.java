@@ -32,6 +32,11 @@ public class Control implements InputProviderListener{
     }
     
     if(board.debugMode){
+      
+      if( command.equals(Commands.dumpGrid) ){
+        board.dumpGrid();
+      }
+      
       System.out.println(command);
     }
   }

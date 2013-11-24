@@ -22,6 +22,7 @@ public class Commands {
   
   public static final Command newGame = new BasicCommand("newGame");
   public static final Command debugMode = new BasicCommand("debugMode");
+  public static final Command dumpGrid = new BasicCommand("dumpGrid");
   
   public static final KeyControl moveLeftKey = new KeyControl(Input.KEY_LEFT);
   public static final KeyControl moveRightKey = new KeyControl(Input.KEY_RIGHT);
@@ -34,4 +35,5 @@ public class Commands {
   
   public static final KeyControl newGameKey = new KeyControl(Input.KEY_F1);
   public static final KeyControl debugModeKey = new KeyControl(Input.KEY_ESCAPE);
+  public static final KeyControl dumpGridKey = new KeyControl(Input.KEY_G);
 }
