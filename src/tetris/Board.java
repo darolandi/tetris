@@ -563,6 +563,26 @@ public class Board {
   }
   
   /**
+   * Rotates the Tetromino counter-clockwise.
+   * Tetromino deals with the collision checking.
+   */
+  public void rotateLeft(){
+    if(currentTetro != null){
+      currentTetro.rotateLeft(grid);
+    }
+  }
+  
+  /**
+   * Rotates the Tetromino clockwise.
+   * Tetromino deals with the collision checking.
+   */
+  public void rotateRight(){
+    if(currentTetro != null){
+      currentTetro.rotateRight(grid);
+    }
+  }
+  
+  /**
    * Dumps the contents of the grid for debugging.
    */
   public void dumpGrid(){

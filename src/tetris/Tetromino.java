@@ -124,13 +124,33 @@ public class Tetromino {
                         refY + points[3].getY() * Board.BLOCK_SIZE);    
   }  
   
-  // expected to be called during move-to-spawn
+  // expected to be called only during move-to-spawn
+  // or when rotating
   private void syncGrid(Block[][] grid){
-    // loop unrolling for performance    
-    grid[ (int)blocks[0].getGridY() ][ (int)blocks[0].getGridX() ] = blocks[0];
-    grid[ (int)blocks[1].getGridY() ][ (int)blocks[1].getGridX() ] = blocks[1];
-    grid[ (int)blocks[2].getGridY() ][ (int)blocks[2].getGridX() ] = blocks[2];
-    grid[ (int)blocks[3].getGridY() ][ (int)blocks[3].getGridX() ] = blocks[3];
+    Block tempBlock;
+    // loop unrolling for performance
+    tempBlock = blocks[0];
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
+    tempBlock = blocks[1];
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
+    tempBlock = blocks[2];
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
+    tempBlock = blocks[3];
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
+  }
+  
+  // expected to be called only when rotating
+  private void unsyncGrid(Block[][] grid){
+    Block tempBlock;
+    // loop unrolling for performance
+    tempBlock = blocks[0];
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    tempBlock = blocks[1];
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    tempBlock = blocks[2];
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    tempBlock = blocks[3];
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
   }
   
   /**
@@ -158,6 +178,28 @@ public class Tetromino {
   public void moveRight(){
     refX += Board.BLOCK_SIZE;
     syncBlocks();
+  }
+  
+  /**
+   * Rotates the Tetromino counter-clockwise.
+   * @param grid Grid of Blocks from the Board.
+   */
+  public void rotateLeft(Block[][] grid){
+    unsyncGrid(grid);
+    state = (state + 3)%4;
+    syncBlocks();
+    syncGrid(grid);
+  }
+  
+  /**
+   * Rotates the Tetromino clockwise.
+   * @param grid Grid of Blocks from the Board.
+   */
+  public void rotateRight(Block[][] grid){
+    unsyncGrid(grid);
+    state = (state + 1)%4;
+    syncBlocks();
+    syncGrid(grid);
   }
   
   @Override
