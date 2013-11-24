@@ -1,7 +1,7 @@
 package tetris;
 
 import org.newdawn.slick.Color;
-import java.awt.Point;
+import org.newdawn.slick.geom.Point;
 
 /**
  * Different types of Tetromino and various data.

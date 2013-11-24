@@ -4,6 +4,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.command.InputProvider;
+import org.newdawn.slick.geom.Point;
 
 /**
  * Defines the board area where Blocks are contained.
@@ -23,10 +24,15 @@ public class Board {
   
   public static final int BLOCK_SIZE = 20; // pixels
   
+  private static final float NEXT_TETRO_OFFSETX = GAME_OFFSETX*2 + WIDTH*BLOCK_SIZE;
+  private static final float NEXT_TETRO_OFFSETY = GAME_OFFSETY;
+  private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
+  private static final Color NEXT_TETRO_BORDER = GAME_BORDER;    
+  
   private GameContainer gc;
   private Block[][] grid;
   private Tetromino currentTetromino;
-  private TetrominoInfo nextTetrominoType;
+  private Tetromino nextTetromino;
   
   public Board(GameContainer gc){
     this.gc = gc;    
@@ -53,19 +59,34 @@ public class Board {
   
   private void newGame(){
     grid = new Block[WIDTH][HEIGHT];
+    currentTetromino = null;
     selectNextTetromino();
   }  
   
   private void spawnTetromino(){
-    
+    currentTetromino = nextTetromino;
+    moveNewTetromino();
+    selectNextTetromino();
+  }
+  
+  // PRECONDITION: currentTetromino pointing to new Tetromino
+  private void moveNewTetromino(){
+    currentTetromino.moveToSpawn();
   }
   
   private void selectNextTetromino(){
+    TetrominoInfo type = TetrominoInfo.getRandom();
+    Point spawnPoint = TetrominoInfo.getSpawnPoint( type );
+    float spawnX = spawnPoint.getX();
+    float spawnY = spawnPoint.getY();
     
+    nextTetromino = new Tetromino( type,
+            NEXT_TETRO_OFFSETX + spawnX*BLOCK_SIZE,
+            NEXT_TETRO_OFFSETY + spawnY*BLOCK_SIZE );
   }
   
   public void update(GameContainer gc, int dt){
-    nextTetrominoType = TetrominoInfo.getRandom();
+    
   }
   
   /**
@@ -86,14 +107,15 @@ public class Board {
   
   /**
    * Renders the Tetrominos and the game field.
-   * @param gc
-   * @param g 
+   * @param gc Game Container.
+   * @param g Graphics context.
    */
   public void render(GameContainer gc, Graphics g){
-    renderGameField(gc, g);
-//    renderTetromino(gc, g);    
+    renderGameField(gc, g);    
+//    renderTetromino(gc, g);
+    renderNextTetrominoField(gc, g);
   }    
-  
+      
   private void renderGameField(GameContainer gc, Graphics g){
     g.setColor( GAME_BACKGROUND );
     g.fillRect( GAME_OFFSETX, GAME_OFFSETY, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
@@ -101,7 +123,16 @@ public class Board {
     g.drawRect( GAME_OFFSETX, GAME_OFFSETY, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
   }
   
+  private void renderNextTetrominoField(GameContainer gc, Graphics g){
+    g.setColor( NEXT_TETRO_BACKGROUND );
+    g.fillRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
+    g.setColor( NEXT_TETRO_BORDER );
+    g.drawRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
+  }    
+  
   private void renderTetromino(GameContainer gc, Graphics g){
+    nextTetromino.render(gc, g);
+    
     for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
       Block temp = grid[row][0];
       if(temp != null){
