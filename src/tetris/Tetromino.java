@@ -26,10 +26,19 @@ public class Tetromino {
   public Tetromino(TetrominoInfo type, float x, float y){
     this.type = type;
     refX = x;
-    refY = y;
-    blocks = new Block[4];
+    refY = y;    
     state = 0;
+    createBlocks();
     syncBlocks();
+  }
+  
+  private void createBlocks(){
+    blocks = new Block[4];
+    blocks[0] = new Block(type, refX, refY);
+    blocks[1] = new Block(type, refX, refY);
+    blocks[2] = new Block(type, refX, refY);
+    blocks[3] = new Block(type, refX, refY);
+    
   }
   
   /**
@@ -40,7 +49,7 @@ public class Tetromino {
    * @param gc Game Container.
    * @param g Graphics context.
    */
-  public void render(GameContainer gc, Graphics g){
+  public void render(GameContainer gc, Graphics g){    
     blocks[0].render(gc, g);
     blocks[1].render(gc, g);
     blocks[2].render(gc, g);
@@ -74,221 +83,19 @@ public class Tetromino {
     refX = Board.GAME_OFFSETX + spawnX*Board.BLOCK_SIZE;
     refY = Board.GAME_OFFSETY + (spawnY - Board.HEIGHT_WAITING)*Board.BLOCK_SIZE;
     syncBlocks();
-  }
+  }   
   
   private void syncBlocks(){
-    switch(type){
-      case I: syncI(); break;
-      case Z: syncZ(); break;
-      case S: syncS(); break;
-      case O: syncO(); break;
-      case T: syncT(); break;
-      case L: syncL(); break;
-      case J: syncJ(); break;
-    }
-  }
-  
-  private void syncI(){
-    switch(state){
-      case 0:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 1:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 2:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 3:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-    }            
-  }
-  
-  private void syncZ(){
-    switch(state){
-      case 0:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 1:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 2:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 3:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-    }            
-  }
-  
-  private void syncS(){
-    switch(state){
-      case 0:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 1:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 2:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 3:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-    }            
-  }
-  
-  private void syncO(){
-    switch(state){
-      case 0:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 1:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 2:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 3:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-    }            
-  }
-  
-  private void syncT(){
-    switch(state){
-      case 0:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 1:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 2:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 3:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-    }            
-  }
-  
-  private void syncL(){
-    switch(state){
-      case 0:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 1:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 2:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 3:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-    }            
-  }
-  
-  private void syncJ(){
-    switch(state){
-      case 0:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 1:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 2:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-      case 3:
-        blocks[0].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[1].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[2].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        blocks[3].setPosition(refX + 0*Board.BLOCK_SIZE, refY + 1*Board.BLOCK_SIZE);
-        break;
-    }            
-  }
+    Point[] points = TetrominoInfo.getPoints(type)[state];    
+    
+    blocks[0].setPosition(refX + points[0].getX() * Board.BLOCK_SIZE,
+                        refY + points[0].getY() * Board.BLOCK_SIZE);
+    blocks[1].setPosition(refX + points[1].getX() * Board.BLOCK_SIZE,
+                        refY + points[1].getY() * Board.BLOCK_SIZE);
+    blocks[2].setPosition(refX + points[2].getX() * Board.BLOCK_SIZE,
+                        refY + points[2].getY() * Board.BLOCK_SIZE);
+    blocks[3].setPosition(refX + points[3].getX() * Board.BLOCK_SIZE,
+                        refY + points[3].getY() * Board.BLOCK_SIZE);    
+  }  
   
 }

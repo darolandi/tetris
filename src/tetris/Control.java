@@ -2,7 +2,6 @@ package tetris;
 
 import org.newdawn.slick.command.Command;
 import org.newdawn.slick.command.InputProviderListener;
-import org.newdawn.slick.Color;
 
 /**
  * Listens to and handles keyboard inputs.

@@ -85,7 +85,7 @@ public class Board {
     Point spawnPoint = TetrominoInfo.getSpawnPoint( type );
     float spawnX = spawnPoint.getX();
     float spawnY = spawnPoint.getY();
-    
+        
     nextTetromino = new Tetromino( type,
             NEXT_TETRO_OFFSETX + (spawnX-2)*BLOCK_SIZE,
             NEXT_TETRO_OFFSETY + (spawnY-1)*BLOCK_SIZE );
@@ -117,9 +117,9 @@ public class Board {
    * @param g Graphics context.
    */
   public void render(GameContainer gc, Graphics g){
-    renderGameField(gc, g);    
-    renderTetromino(gc, g);
+    renderGameField(gc, g);
     renderNextTetrominoField(gc, g);
+    renderTetromino(gc, g);    
   }    
       
   private void renderGameField(GameContainer gc, Graphics g){
@@ -127,17 +127,10 @@ public class Board {
     g.fillRect( GAME_OFFSETX, GAME_OFFSETY, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
     g.setColor( GAME_BORDER );
     g.drawRect( GAME_OFFSETX, GAME_OFFSETY, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
-  }
-  
-  private void renderNextTetrominoField(GameContainer gc, Graphics g){
-    g.setColor( NEXT_TETRO_BACKGROUND );
-    g.fillRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
-    g.setColor( NEXT_TETRO_BORDER );
-    g.drawRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
   }    
   
   private void renderTetromino(GameContainer gc, Graphics g){
-    nextTetromino.render(gc, g);
+    nextTetromino.render(gc, g);    
     
 //    for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
 //      Block temp = grid[row][0];
@@ -147,5 +140,12 @@ public class Board {
 //    }
     
   }
+  
+  private void renderNextTetrominoField(GameContainer gc, Graphics g){
+    g.setColor( NEXT_TETRO_BACKGROUND );
+    g.fillRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
+    g.setColor( NEXT_TETRO_BORDER );
+    g.drawRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
+  }    
   
 }

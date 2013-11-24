@@ -132,8 +132,17 @@ public enum TetrominoInfo {
     }
   }    
   
-  public static Point[][] getPoints(TetrominoInfo){
-    
+  public static Point[][] getPoints(TetrominoInfo type){
+    switch(type){
+      case I: return pointsI;
+      case Z: return pointsZ;
+      case S: return pointsS;
+      case T: return pointsT;
+      case L: return pointsL;
+      case J: return pointsJ;
+      case O: return pointsO;
+      default: throw new IllegalArgumentException();
+    }
   }
   
 }
