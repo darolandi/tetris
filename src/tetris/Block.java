@@ -43,6 +43,22 @@ public class Block {
   }
   
   /**
+   * Returns X coordinate of topleft corner.
+   * @return X coordinate of topleft corner.
+   */
+  public float getX(){
+    return x;
+  }
+  
+  /**
+   * Returns Y coordinate of topleft corner.
+   * @return Y coordinate of topleft corner.
+   */
+  public float getY(){
+    return y;
+  }
+  
+  /**
    * Returns col position in the grid.
    * @return Col position in the grid.
    */

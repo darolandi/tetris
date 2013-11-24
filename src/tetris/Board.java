@@ -10,7 +10,6 @@ import org.newdawn.slick.geom.Point;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 
 /**
  * Defines the board area where Blocks are contained.
@@ -109,10 +108,8 @@ public class Board {
   
   private TetrominoType getNextTetroType(){
     if( nextTypes.isEmpty() ){
-//      refillNextTypes();
-      nextTypes.add(TetrominoType.I);
-      nextTypes.add(TetrominoType.I);
-      nextTypes.add(TetrominoType.O);
+//      refillNextTypes();      
+      return TetrominoType.O;
     }
     return nextTypes.removeLast();    
   }
@@ -139,9 +136,8 @@ public class Board {
     }
     if(currentTetro == null){
       spawnTetromino();
-    }else if( canMoveDown() ){
-      // notice redundant canMoveDown() call
-      moveDown();      
+    }else if( canMoveDown() ){      
+      moveDownWithoutCheck();
     }else{
       thud();
     }    
@@ -157,7 +153,7 @@ public class Board {
   
   private void attemptClearRows(){
     boolean didClearRow;
-    HashSet<Integer> clearedRows = new HashSet<>(5);    
+    ArrayDeque<Integer> clearedRows = new ArrayDeque<>(5);
     int row = HEIGHT-1;    
     
     while(row >= HEIGHT_WAITING){
@@ -170,7 +166,7 @@ public class Board {
         }
       }
       if(didClearRow){
-        clearedRows.add(row);
+        clearedRows.addFirst(row);
       }
       row--;
     }
@@ -181,7 +177,7 @@ public class Board {
     }
   }
   
-  private void clearRows(HashSet<Integer> clearedRows){
+  private void clearRows(ArrayDeque<Integer> clearedRows){
     // Blocks far above can get removed several times
     // but the optimal algorithm is not worth the time right now
     for(Integer row : clearedRows){
@@ -193,10 +189,19 @@ public class Board {
     // would be much more efficient if we could
     // store the max height of the Tetris tower
     // and only loop that much
-    for(int row = startRow; row >= 1; row--){
-      Block[] blockRowTo = grid[row];
-      Block[] blockRowFrom = grid[row - 1];
-      System.arraycopy(blockRowFrom, 0, blockRowTo, 0, WIDTH);
+    Block blockRowTo[], blockRowFrom[], temp;
+    
+    for(int row = startRow; row >= 1; row--){      
+      blockRowTo = grid[row];
+      blockRowFrom = grid[row - 1];
+      for(int col = 0; col < WIDTH; col++){
+        blockRowTo[col] = blockRowFrom[col];
+                
+        temp = blockRowTo[col];
+        if(temp != null){
+          temp.setPosition( temp.getX(), temp.getY() + Board.BLOCK_SIZE );
+        }
+      }
     }
   }
   
@@ -257,7 +262,10 @@ public class Board {
     if(! canMoveDown()){      
       return;
     }
-    
+    moveDownWithoutCheck();    
+  }
+  
+  private void moveDownWithoutCheck(){
     Block tempBlock = currentTetro.getBlock(0);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
     tempBlock = currentTetro.getBlock(1);
@@ -277,6 +285,15 @@ public class Board {
     grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;
     
     currentTetro.moveDown();
+  }
+  
+  /**
+   * While can still move down, do move down.
+   */
+  public void hardDrop(){
+    while(canMoveDown()){
+      moveDownWithoutCheck();
+    }
   }
   
   private boolean canMoveDown(){
