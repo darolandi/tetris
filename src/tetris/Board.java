@@ -67,13 +67,13 @@ public class Board {
     provider.addListener( new Control(this) );
     
     provider.bindCommand( Commands.moveLeftKey, Commands.moveLeft);
-    provider.bindCommand( Commands.moveRightKey, Commands.moveRight);
-    provider.bindCommand( Commands.moveUpKey, Commands.moveUp);
+    provider.bindCommand( Commands.moveRightKey, Commands.moveRight);    
     provider.bindCommand( Commands.moveDownKey, Commands.moveDown);
     
     provider.bindCommand( Commands.hardDropKey, Commands.hardDrop);
     provider.bindCommand( Commands.rotateLeftKey, Commands.rotateLeft);
-    provider.bindCommand( Commands.rotateRightKey, Commands.rotateRight);
+    provider.bindCommand( Commands.rotateRightKey1, Commands.rotateRight);
+    provider.bindCommand( Commands.rotateRightKey2, Commands.rotateRight);
     
     provider.bindCommand( Commands.newGameKey, Commands.newGame);
     provider.bindCommand( Commands.debugModeKey, Commands.debugMode);
@@ -206,7 +206,9 @@ public class Board {
       scoreKeeper.clearedRows( clearedRows.size() );
       clearCounter += clearedRows.size();
       if(clearCounter >= CLEARS_PER_LEVEL){
-        scoreKeeper.levelUp( clearCounter/CLEARS_PER_LEVEL );
+        int levelIncrease = clearCounter/CLEARS_PER_LEVEL;
+        scoreKeeper.levelUp( levelIncrease );
+        lockDelay -= LOCK_DELAY_DECREMENT_PER_LEVEL * levelIncrease;
         clearCounter %= CLEARS_PER_LEVEL;        
       }
     }
@@ -355,6 +357,8 @@ public class Board {
     while(canMoveDown()){
       moveDownWithoutCheck();
     }
+    lockCounter = 0;
+    thud();
   }
   
   private boolean canMoveDown(){

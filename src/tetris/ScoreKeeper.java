@@ -37,12 +37,12 @@ public class ScoreKeeper {
   }
   
   /**
-   * Increases level by levelUp levels.
+   * Increases level by levelIncrease.
    * 
-   * @param levelUp Number of increase.
+   * @param levelIncrease Number of increase.
    */
-  public void levelUp(int levelUp){
-    level += levelUp;
+  public void levelUp(int levelIncrease){
+    level += levelIncrease;
   }
   
   /**

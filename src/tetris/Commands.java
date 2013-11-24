@@ -13,8 +13,7 @@ import org.newdawn.slick.command.KeyControl;
 public class Commands {
   public static final Command moveLeft = new BasicCommand("moveLeft");
   public static final Command moveRight = new BasicCommand("moveRight");
-  public static final Command moveDown = new BasicCommand("moveDown");
-  public static final Command moveUp = new BasicCommand("moveUp");
+  public static final Command moveDown = new BasicCommand("moveDown");  
   
   public static final Command hardDrop = new BasicCommand("hardDrop");
   public static final Command rotateLeft = new BasicCommand("rotateLeft");
@@ -27,11 +26,11 @@ public class Commands {
   public static final KeyControl moveLeftKey = new KeyControl(Input.KEY_LEFT);
   public static final KeyControl moveRightKey = new KeyControl(Input.KEY_RIGHT);
   public static final KeyControl moveDownKey = new KeyControl(Input.KEY_DOWN);
-  public static final KeyControl moveUpKey = new KeyControl(Input.KEY_UP);
   
   public static final KeyControl hardDropKey = new KeyControl(Input.KEY_SPACE);
   public static final KeyControl rotateLeftKey = new KeyControl(Input.KEY_Z);
-  public static final KeyControl rotateRightKey = new KeyControl(Input.KEY_X);
+  public static final KeyControl rotateRightKey1 = new KeyControl(Input.KEY_X);
+  public static final KeyControl rotateRightKey2 = new KeyControl(Input.KEY_UP);
   
   public static final KeyControl newGameKey = new KeyControl(Input.KEY_F1);
   public static final KeyControl debugModeKey = new KeyControl(Input.KEY_ESCAPE);
