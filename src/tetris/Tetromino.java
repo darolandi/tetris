@@ -33,7 +33,7 @@ public class Tetromino {
   }
   
   private void createBlocks(){
-    Block[] blocks = new Block[4];
+    blocks = new Block[4];
     blocks[0] = new Block(type, refX, refY);
     blocks[1] = new Block(type, refX, refY);
     blocks[2] = new Block(type, refX, refY);
@@ -97,7 +97,7 @@ public class Tetromino {
   private void syncBlocks(){
     Point[] points = TetrominoInfo.getPoints(type)[state];    
     
-    // loop unrolling for performance
+    // loop unrolling for performance        
     blocks[0].setPosition(refX + points[0].getX() * Board.BLOCK_SIZE,
                         refY + points[0].getY() * Board.BLOCK_SIZE);
     blocks[1].setPosition(refX + points[1].getX() * Board.BLOCK_SIZE,
@@ -108,12 +108,56 @@ public class Tetromino {
                         refY + points[3].getY() * Board.BLOCK_SIZE);    
   }  
   
+  // expected to be called during move-to-spawn
   private void syncGrid(Block[][] grid){
     // loop unrolling for performance
+    System.out.println(blocks[0].y + " and " + blocks[0].getGridY());
     grid[ (int)blocks[0].getGridY() ][ (int)blocks[0].getGridX() ] = blocks[0];
     grid[ (int)blocks[1].getGridY() ][ (int)blocks[1].getGridX() ] = blocks[1];
     grid[ (int)blocks[2].getGridY() ][ (int)blocks[2].getGridX() ] = blocks[2];
     grid[ (int)blocks[3].getGridY() ][ (int)blocks[3].getGridX() ] = blocks[3];
+  }
+  
+  /**
+   * Move the Tetromino to the down.
+   * Precondition: Board already checked for empty spaces.
+   */
+  public void moveDown(){
+    refY += Board.BLOCK_SIZE;
+    syncBlocks();
+  }
+  
+  /**
+   * Move the Tetromino to the left.
+   * Precondition: Board already checked for empty spaces.
+   */
+  public void moveLeft(){
+    refX -= Board.BLOCK_SIZE;
+    syncBlocks();
+  }
+  
+  /**
+   * Move the Tetromino to the right.
+   * Precondition: Board already checked for empty spaces.
+   */
+  public void moveRight(){
+    refX += Board.BLOCK_SIZE;
+    syncBlocks();
+  }
+  
+  @Override
+  public String toString(){
+    StringBuilder result = new StringBuilder("");
+    
+    result.append("Type: ");
+    result.append(type);
+    
+    result.append("\nrefX: ");
+    result.append(refX);
+    result.append("\nrefY: ");
+    result.append(refY);        
+    
+    return result.toString();
   }
   
 }

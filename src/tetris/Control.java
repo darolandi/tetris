@@ -30,6 +30,10 @@ public class Control implements InputProviderListener{
     }else if( command.equals(Commands.moveRight) ){
       board.moveRight();
     }
+    
+    if(board.debugMode){
+      System.out.println(command);
+    }
   }
   
   /**

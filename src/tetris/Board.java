@@ -1,6 +1,7 @@
 package tetris;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.command.InputProvider;
@@ -67,7 +68,7 @@ public class Board {
   }
   
   private void newGame(){
-    grid = new Block[WIDTH][HEIGHT];
+    grid = new Block[HEIGHT][WIDTH];
     currentTetro = null;
     selectNextTetro();
   }  
@@ -107,6 +108,12 @@ public class Board {
     if(debugMode){
       System.out.println("Tick!");
     }
+    if(currentTetro == null){
+      spawnTetromino();
+    }else{
+      moveDown();
+      System.out.println(currentTetro);
+    }
     // move down playing piece
     // if not possible, call thud()
   }
@@ -125,7 +132,11 @@ public class Board {
   public void render(GameContainer gc, Graphics g){
     renderGameField(gc, g);
     renderNextTetroField(gc, g);
-    renderTetromino(gc, g);    
+    renderTetromino(gc, g);
+    
+    if(debugMode){
+      renderMouse(gc, g);
+    }
   }    
       
   private void renderGameField(GameContainer gc, Graphics g){
@@ -145,58 +156,102 @@ public class Board {
   private void renderTetromino(GameContainer gc, Graphics g){
     nextTetro.render(gc, g);    
     
-//    for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
-//      Block temp = grid[row][0];
-//      if(temp != null){
-//        temp.render(gc, g);
-//      }      
-//    }
+    for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
+      for(int col = 0; col < WIDTH; col++){
+        Block temp = grid[row][col];
+        if(temp != null){
+          temp.render(gc, g);
+        }
+      }
+    }
     
   }    
   
+  private void renderMouse(GameContainer gc, Graphics g){
+    Input input = gc.getInput();
+    g.setColor( Color.white);
+    g.drawString(input.getMouseX() + ", " + input.getMouseY(), 550, 450);
+  }
+  
+  /**
+   * Move the Tetromino to the down.
+   */
   public void moveDown(){
     // check if allowed
     
+    Block tempBlock = currentTetro.getBlock(0);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    tempBlock = currentTetro.getBlock(1);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    tempBlock = currentTetro.getBlock(2);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    tempBlock = currentTetro.getBlock(3);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    
+    tempBlock = currentTetro.getBlock(0);
+    grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(1);    
+    grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(2);    
+    grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(3);    
+    grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;
+    
+    currentTetro.moveDown();
   }
   
+  /**
+   * Move the Tetromino to the left.
+   */
   public void moveLeft(){
     // check if allowed
     
     Block tempBlock = currentTetro.getBlock(0);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
-    
     tempBlock = currentTetro.getBlock(1);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
-    
     tempBlock = currentTetro.getBlock(2);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
-    
     tempBlock = currentTetro.getBlock(3);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    
+    tempBlock = currentTetro.getBlock(0);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(1);    
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(2);    
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(3);    
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+    
+    currentTetro.moveLeft();
   }
   
+  /**
+   * Move the Tetromino to the right.
+   */
   public void moveRight(){
     // check if allowed
     
     Block tempBlock = currentTetro.getBlock(0);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
-    
     tempBlock = currentTetro.getBlock(1);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
-    
     tempBlock = currentTetro.getBlock(2);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
-    
     tempBlock = currentTetro.getBlock(3);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+    
+    tempBlock = currentTetro.getBlock(0);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(1);    
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(2);    
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;    
+    tempBlock = currentTetro.getBlock(3);    
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
+    
+    currentTetro.moveRight();
   }
   
 }

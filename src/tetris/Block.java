@@ -14,8 +14,8 @@ public class Block {
   public static final Color border = new Color(255, 255, 255);    
   
   private TetrominoInfo type;
-  private float x;
-  private float y;
+  public float x;
+  public float y;
   
   /**
    * Sets the Block based on the type.
@@ -55,7 +55,7 @@ public class Block {
    * @return Row position in the grid.
    */
   public int getGridY(){
-    return (int)( (y - Board.GAME_OFFSETY) / Board.BLOCK_SIZE);
+    return (int)( (y - Board.GAME_OFFSETY + Board.HEIGHT_WAITING*Board.BLOCK_SIZE) / Board.BLOCK_SIZE);
   }
   
   /**
