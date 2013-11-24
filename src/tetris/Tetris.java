@@ -7,6 +7,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.SlickException;
 
+import java.io.File;
+
 /**
  * Application class for the Tetris game.
  * 
@@ -90,6 +92,9 @@ public class Tetris extends BasicGame{
   public static void main(String[] args) {
     
     try{
+      System.setProperty("java.library.path", new File("lib").getAbsolutePath());
+      System.setProperty("org.lwjgl.librarypath", new File("lib/native").getAbsolutePath());
+      
       AppGameContainer appgc;
       
       appgc = new AppGameContainer(new Tetris() );
@@ -97,6 +102,8 @@ public class Tetris extends BasicGame{
       appgc.start();
     }catch(SlickException e){
       e.printStackTrace();
+    }catch(UnsatisfiedLinkError err){
+      // ignore, we're expecting
     }
         
   }
