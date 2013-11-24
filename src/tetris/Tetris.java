@@ -13,7 +13,7 @@ import org.newdawn.slick.SlickException;
  * @author Daniel Rolandi
  */
 public class Tetris extends BasicGame{
-  private static final int WINDOW_WIDTH = 640;
+  private static final int WINDOW_WIDTH = 700;
   private static final int WINDOW_HEIGHT = 480;
   private static final boolean FULLSCREEN = false;
   private static final Color BACKGROUND = new Color(112, 48, 160);    
@@ -63,6 +63,22 @@ public class Tetris extends BasicGame{
   public void render(GameContainer gc, Graphics g) throws SlickException{
     g.setBackground(BACKGROUND);
     board.render(gc, g);
+    renderHelp(gc, g);
+  }
+  
+  private void renderHelp(GameContainer gc, Graphics g){
+    g.setColor( Color.white );
+    g.drawString("CONTROLS", Offsets.HELP_X, Offsets.HELP_Y);
+    g.drawString("left; Move left", Offsets.HELP_X, Offsets.HELP_Y + Offsets.NEWLINE);
+    g.drawString("right; Move right", Offsets.HELP_X, Offsets.HELP_Y + 2*Offsets.NEWLINE);
+    g.drawString("down; Move down (soft)", Offsets.HELP_X, Offsets.HELP_Y + 3*Offsets.NEWLINE);
+    g.drawString("space; Hard drop", Offsets.HELP_X, Offsets.HELP_Y + 4*Offsets.NEWLINE);
+    g.drawString("Z; Rotate CCW", Offsets.HELP_X, Offsets.HELP_Y + 5*Offsets.NEWLINE);
+    g.drawString("X/up; Rotate CW", Offsets.HELP_X, Offsets.HELP_Y + 6*Offsets.NEWLINE);
+    g.drawString("F1; New Game", Offsets.HELP_X, Offsets.HELP_Y + 7*Offsets.NEWLINE);
+    g.drawString("ESC; Toggle Debug Mode", Offsets.HELP_X, Offsets.HELP_Y + 8*Offsets.NEWLINE);
+    g.drawString("G; Dump Grid (debug only)", Offsets.HELP_X, Offsets.HELP_Y + 9*Offsets.NEWLINE);
+    g.drawString("M; Toggle mute/unmute BGM", Offsets.HELP_X, Offsets.HELP_Y + 10*Offsets.NEWLINE);        
   }
   
   /**

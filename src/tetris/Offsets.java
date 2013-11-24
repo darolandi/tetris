@@ -23,4 +23,7 @@ public class Offsets {
   public static final float MOUSE_X = NEXT_TETRO_X;
   public static final float MOUSE_Y = NEXT_TETRO_Y + GAME_X*9;
   
+  public static final float HELP_X = NEXT_TETRO_X + Board.NEXT_TETRO_SIZE + GAME_X;
+  public static final float HELP_Y = NEXT_TETRO_Y;
+  
 }

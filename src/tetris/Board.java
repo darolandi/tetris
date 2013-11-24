@@ -73,6 +73,7 @@ public class Board {
     musicVolume = 1;
     setupControl();
     newGame();
+    defeat();
   }
   
   private void setupControl(){
