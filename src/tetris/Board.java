@@ -26,7 +26,7 @@ public class Board {
   private GameContainer gc;
   private Block[][] grid;
   private Tetromino currentTetromino;
-  private TetrominoType nextTetrominoType;
+  private TetrominoInfo nextTetrominoType;
   
   public Board(GameContainer gc){
     this.gc = gc;    
@@ -53,12 +53,8 @@ public class Board {
   
   private void newGame(){
     grid = new Block[WIDTH][HEIGHT];
-    // spawn Tetromino
-  }
-  
-  private void spawnTetrominoInitial(){
-    
-  }
+    selectNextTetromino();
+  }  
   
   private void spawnTetromino(){
     
@@ -69,7 +65,7 @@ public class Board {
   }
   
   public void update(GameContainer gc, int dt){
-    
+    nextTetrominoType = TetrominoInfo.getRandom();
   }
   
   /**

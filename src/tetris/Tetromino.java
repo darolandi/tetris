@@ -11,9 +11,9 @@ package tetris;
  * @author Daniel Rolandi
  */
 public class Tetromino {
-  public TetrominoType type;
+  public TetrominoInfo type;
   
-  public Tetromino(TetrominoType type){
+  public Tetromino(TetrominoInfo type){
     
   }
   

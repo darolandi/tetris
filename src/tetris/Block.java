@@ -13,7 +13,7 @@ import org.newdawn.slick.Graphics;
 public class Block {
   public static final Color border = new Color(255, 255, 255);
   
-  private TetrominoType type;
+  private TetrominoInfo type;
   private float x;
   private float y;
   
@@ -21,7 +21,7 @@ public class Block {
    * Sets the Block based on the type.
    * @param type Tetromino type.
    */
-  public Block(TetrominoType type){
+  public Block(TetrominoInfo type){
     this.type = type;
   }
   
@@ -32,7 +32,7 @@ public class Block {
    * @param g Graphics context.
    */
   public void render(GameContainer gc, Graphics g){
-    g.setColor( TetrominoType.getColor(type) );
+    g.setColor( TetrominoInfo.getColor(type) );
     g.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
     g.setColor( border );
     g.drawRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
