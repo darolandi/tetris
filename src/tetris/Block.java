@@ -11,7 +11,7 @@ import org.newdawn.slick.Graphics;
  * @author Daniel Rolandi
  */
 public class Block {
-  public static final Color border = new Color(255, 255, 255);
+  public static final Color border = new Color(255, 255, 255);    
   
   private TetrominoInfo type;
   private float x;
@@ -20,9 +20,13 @@ public class Block {
   /**
    * Sets the Block based on the type.
    * @param type Tetromino type.
+   * @param x X coordinate of topleft oorner.
+   * @param y Y coordinate of topleft corner.
    */
-  public Block(TetrominoInfo type){
+  public Block(TetrominoInfo type, float x, float y){
     this.type = type;
+    this.x = x;
+    this.y = y;
   }
   
   /**
@@ -36,6 +40,17 @@ public class Block {
     g.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
     g.setColor( border );
     g.drawRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
+  }
+  
+  /**
+   * Sets topleft corner into the given (x,y) coordinate.
+   * 
+   * @param x X coordinate of topleft corner.
+   * @param y Y coordinate of topleft corner.
+   */
+  public void setPosition(float x, float y){
+    this.x = x;
+    this.y = y;
   }
   
 }

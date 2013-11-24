@@ -14,11 +14,11 @@ import org.newdawn.slick.geom.Point;
 public class Board {
   private static final int WIDTH = 10;
   private static final int HEIGHT = 26; // includes Waiting Room
-  private static final int HEIGHT_WAITING = 6; // Waiting Room height
+  public static final int HEIGHT_WAITING = 6; // Waiting Room height
   private static final int HEIGHT_GAME = HEIGHT - HEIGHT_WAITING;
   
-  private static final float GAME_OFFSETX = 40.0f;
-  private static final float GAME_OFFSETY = 40.0f;
+  public static final float GAME_OFFSETX = 40.0f;
+  public static final float GAME_OFFSETY = 40.0f;
   private static final Color GAME_BACKGROUND = new Color(0, 0, 0);
   private static final Color GAME_BORDER = new Color(255, 255, 255);
   
@@ -34,6 +34,12 @@ public class Board {
   private Tetromino currentTetromino;
   private Tetromino nextTetromino;
   
+  /**
+   * Inits the Board (includes game field and Next-Tetromino).
+   * Also inits the control and its listener.
+   * 
+   * @param gc Game Container.
+   */
   public Board(GameContainer gc){
     this.gc = gc;    
     setupControl();
@@ -81,8 +87,8 @@ public class Board {
     float spawnY = spawnPoint.getY();
     
     nextTetromino = new Tetromino( type,
-            NEXT_TETRO_OFFSETX + spawnX*BLOCK_SIZE,
-            NEXT_TETRO_OFFSETY + spawnY*BLOCK_SIZE );
+            NEXT_TETRO_OFFSETX + (spawnX-2)*BLOCK_SIZE,
+            NEXT_TETRO_OFFSETY + (spawnY-1)*BLOCK_SIZE );
   }
   
   public void update(GameContainer gc, int dt){
@@ -112,7 +118,7 @@ public class Board {
    */
   public void render(GameContainer gc, Graphics g){
     renderGameField(gc, g);    
-//    renderTetromino(gc, g);
+    renderTetromino(gc, g);
     renderNextTetrominoField(gc, g);
   }    
       
@@ -133,13 +139,13 @@ public class Board {
   private void renderTetromino(GameContainer gc, Graphics g){
     nextTetromino.render(gc, g);
     
-    for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
-      Block temp = grid[row][0];
-      if(temp != null){
-        temp.render(gc, g);
-      }
-      
-    }
+//    for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
+//      Block temp = grid[row][0];
+//      if(temp != null){
+//        temp.render(gc, g);
+//      }      
+//    }
+    
   }
   
 }
