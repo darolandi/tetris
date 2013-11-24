@@ -7,6 +7,11 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.geom.Point;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 /**
  * Defines the board area where Blocks are contained.
  * 
@@ -36,6 +41,7 @@ public class Board {
   private Block[][] grid;
   private Tetromino currentTetro;
   private Tetromino nextTetro;
+  private ArrayDeque<TetrominoInfo> nextTypes;
   
   
   /**
@@ -71,6 +77,7 @@ public class Board {
   private void newGame(){
     grid = new Block[HEIGHT][WIDTH];
     currentTetro = null;
+    nextTypes = new ArrayDeque<>(8);
     selectNextTetro();
   }  
   
@@ -85,8 +92,9 @@ public class Board {
     currentTetro.moveToSpawn(grid);    
   }
   
-  private void selectNextTetro(){
-    TetrominoInfo type = TetrominoInfo.getRandom();
+  private void selectNextTetro(){    
+//    TetrominoInfo type = TetrominoInfo.getRandom();
+    TetrominoInfo type = getNextTetroType();
     Point spawnPoint = TetrominoInfo.getSpawnPoint( type );
     float spawnX = spawnPoint.getX();
     float spawnY = spawnPoint.getY();
@@ -96,8 +104,22 @@ public class Board {
             NEXT_TETRO_OFFSETY + (spawnY-1)*BLOCK_SIZE );
   }
   
-  public void update(GameContainer gc, int dt){
-    
+  private TetrominoInfo getNextTetroType(){
+    if( nextTypes.isEmpty() ){
+      getNewBag();
+    }
+    return nextTypes.removeLast();    
+  }
+  
+  private void getNewBag(){
+    ArrayList<TetrominoInfo> newBag = new ArrayList<>(7);
+    for(TetrominoInfo type : TetrominoInfo.values() ){
+      newBag.add(type);
+    }
+    Collections.shuffle(newBag);
+    for(TetrominoInfo type : newBag){
+      nextTypes.addLast(type);
+    }
   }
   
   /**

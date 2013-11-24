@@ -51,8 +51,7 @@ public class Tetris extends BasicGame{
    * @throws SlickException 
    */
   @Override
-  public void update(GameContainer gc, int dt) throws SlickException{
-    board.update(gc, dt);
+  public void update(GameContainer gc, int dt) throws SlickException{    
     updateTicker(gc, dt);
   }
   
