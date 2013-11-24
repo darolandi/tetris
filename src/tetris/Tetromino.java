@@ -185,10 +185,43 @@ public class Tetromino {
    * @param grid Grid of Blocks from the Board.
    */
   public void rotateLeft(Block[][] grid){
-    unsyncGrid(grid);
-    state = (state + 3)%4;
-    syncBlocks();
+    unsyncGrid(grid);    
+    if( canRotateLeft(grid)){
+      state = (state + 3)%4;
+      syncBlocks();      
+    }
     syncGrid(grid);
+  }
+  
+  private boolean canRotateLeft(Block[][] grid){
+    int futureState = (state + 3)%4;
+    Point[] points = TetrominoInfo.getPoints(type)[futureState];
+    int gridX;
+    int gridY;
+    
+    // loop unrolling for performance
+    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[0].getX() );
+    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[0].getY() + Board.HEIGHT_WAITING );
+    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+      return false;
+    }
+    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[1].getX() );
+    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[1].getY() + Board.HEIGHT_WAITING );
+    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+      return false;
+    }
+    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[2].getX() );
+    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[2].getY() + Board.HEIGHT_WAITING );
+    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+      return false;
+    }
+    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[3].getX() );
+    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[3].getY() + Board.HEIGHT_WAITING );
+    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+      return false;
+    }
+    
+    return true;
   }
   
   /**
@@ -197,9 +230,42 @@ public class Tetromino {
    */
   public void rotateRight(Block[][] grid){
     unsyncGrid(grid);
-    state = (state + 1)%4;
-    syncBlocks();
+    if( canRotateRight(grid)){
+      state = (state + 1)%4;
+      syncBlocks();      
+    }
     syncGrid(grid);
+  }
+  
+  private boolean canRotateRight(Block[][] grid){
+    int futureState = (state + 1)%4;
+    Point[] points = TetrominoInfo.getPoints(type)[futureState];
+    int gridX;
+    int gridY;
+    
+    // loop unrolling for performance
+    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[0].getX() );
+    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[0].getY() + Board.HEIGHT_WAITING );
+    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+      return false;
+    }
+    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[1].getX() );
+    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[1].getY() + Board.HEIGHT_WAITING );
+    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+      return false;
+    }
+    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[2].getX() );
+    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[2].getY() + Board.HEIGHT_WAITING );
+    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+      return false;
+    }
+    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[3].getX() );
+    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[3].getY() + Board.HEIGHT_WAITING );
+    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+      return false;
+    }
+    
+    return true;
   }
   
   @Override

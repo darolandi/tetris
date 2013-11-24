@@ -71,7 +71,8 @@ public class Block {
    * @return Row position in the grid.
    */
   public int getGridY(){
-    return (int)( (y - Offsets.GAME_Y + Board.HEIGHT_WAITING*Board.BLOCK_SIZE) / Board.BLOCK_SIZE);
+//    return (int)( (y - Offsets.GAME_Y + Board.HEIGHT_WAITING*Board.BLOCK_SIZE) / Board.BLOCK_SIZE);
+    return (int)( (y - Offsets.GAME_Y) / Board.BLOCK_SIZE + Board.HEIGHT_WAITING);
   }
   
   /**

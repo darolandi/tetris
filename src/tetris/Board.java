@@ -21,7 +21,7 @@ import java.util.Collections;
  */
 public class Board {
   public static final int WIDTH = 10;
-  private static final int HEIGHT = 26; // includes Waiting Room
+  public static final int HEIGHT = 26; // includes Waiting Room
   public static final int HEIGHT_WAITING = 6; // Waiting Room height
   private static final int HEIGHT_GAME = HEIGHT - HEIGHT_WAITING;
   
@@ -454,7 +454,11 @@ public class Board {
     currentTetro.moveLeft();
   }
   
-  private boolean canMoveLeft(){
+  /**
+   * Returns true if current Tetromino can move left by 1 step.
+   * @return True if current Tetromino can move left by 1 step.
+   */
+  public boolean canMoveLeft(){
     if(currentTetro == null){
       return false;
     }
@@ -532,7 +536,11 @@ public class Board {
     currentTetro.moveRight();
   }
   
-  private boolean canMoveRight(){
+  /**
+   * Returns true if current Tetromino can move right by 1 step.
+   * @return True if current Tetromino can move right by 1 step.
+   */
+  public boolean canMoveRight(){
     if(currentTetro == null){
       return false;
     }
