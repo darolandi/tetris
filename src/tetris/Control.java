@@ -37,6 +37,8 @@ public class Control implements InputProviderListener{
       board.rotateLeft();
     }else if( command.equals(Commands.rotateRight) ){
       board.rotateRight();
+    }else if( command.equals(Commands.toggleMusic) ){
+      board.toggleMusic();
     }
     
     if(board.debugMode){

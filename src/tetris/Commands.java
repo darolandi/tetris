@@ -22,10 +22,11 @@ public class Commands {
   public static final Command newGame = new BasicCommand("newGame");
   public static final Command debugMode = new BasicCommand("debugMode");
   public static final Command dumpGrid = new BasicCommand("dumpGrid");
+  public static final Command toggleMusic = new BasicCommand("toggleMusic");
   
   public static final KeyControl moveLeftKey = new KeyControl(Input.KEY_LEFT);
   public static final KeyControl moveRightKey = new KeyControl(Input.KEY_RIGHT);
-  public static final KeyControl moveDownKey = new KeyControl(Input.KEY_DOWN);
+  public static final KeyControl moveDownKey = new KeyControl(Input.KEY_DOWN);  
   
   public static final KeyControl hardDropKey = new KeyControl(Input.KEY_SPACE);
   public static final KeyControl rotateLeftKey = new KeyControl(Input.KEY_Z);
@@ -35,4 +36,5 @@ public class Commands {
   public static final KeyControl newGameKey = new KeyControl(Input.KEY_F1);
   public static final KeyControl debugModeKey = new KeyControl(Input.KEY_ESCAPE);
   public static final KeyControl dumpGridKey = new KeyControl(Input.KEY_G);
+  public static final KeyControl toggleMusicKey = new KeyControl(Input.KEY_M);
 }

@@ -53,7 +53,7 @@ public class ScoreKeeper {
    */  
   public void render(GameContainer gc, Graphics g){
     g.setColor( TEXT_COLOR );
-    g.drawString( LEVELTEXT_DEFAULT + level, Offsets.SCORE_X, Offsets.SCORE_Y);
+    g.drawString( LEVELTEXT_DEFAULT + String.format("%6d", level), Offsets.SCORE_X, Offsets.SCORE_Y);
     g.drawString( SCORETEXT_DEFAULT + String.format("%6.0f", score),
             Offsets.SCORE_X, Offsets.SCORE_Y + Offsets.NEWLINE );    
   }    

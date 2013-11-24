@@ -4,8 +4,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.SlickException;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -30,10 +32,18 @@ public class Board {
   public static final float NEXT_TETRO_SIZE = 6 * BLOCK_SIZE;
   private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
   private static final Color NEXT_TETRO_BORDER = GAME_BORDER;
+  private static final Music bgm;
+  static{
+    try{
+      bgm = new Music("Tetris.ogg");
+    }catch(SlickException e){
+      throw new IllegalStateException();
+    }
+  }
   
   private static final int BASE_LOCK_DELAY = 1000;
   private static final int LOCK_DELAY_DECREMENT_PER_LEVEL = 50;
-  private static final int CLEARS_PER_LEVEL = 4;
+  private static final int CLEARS_PER_LEVEL = 4;  
   
   private static int lockDelay; // milliseconds
   private int lockCounter; // milliseconds
@@ -48,6 +58,7 @@ public class Board {
   private ScoreKeeper scoreKeeper;
   private boolean isDefeat;
   private int clearCounter;
+  private int musicVolume;
   
   
   /**
@@ -57,7 +68,9 @@ public class Board {
    * @param gc Game Container.
    */
   public Board(GameContainer gc){
-    this.gc = gc;    
+    this.gc = gc;
+    bgm.loop();
+    musicVolume = 1;
     setupControl();
     newGame();
   }
@@ -78,6 +91,7 @@ public class Board {
     provider.bindCommand( Commands.newGameKey, Commands.newGame);
     provider.bindCommand( Commands.debugModeKey, Commands.debugMode);
     provider.bindCommand( Commands.dumpGridKey, Commands.dumpGrid);
+    provider.bindCommand( Commands.toggleMusicKey, Commands.toggleMusic );
   }
   
   /**
@@ -597,6 +611,14 @@ public class Board {
       }
       System.out.println();
     }
+  }
+  
+  /**
+   * Toggle mute/unmute bgm.
+   */
+  public void toggleMusic(){
+    musicVolume ^= 1;
+    bgm.setVolume( musicVolume );
   }
   
 }
