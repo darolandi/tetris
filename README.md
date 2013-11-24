@@ -16,4 +16,8 @@ Block textures were created using <a href="http://www.gimp.org/">GIMP 2</a>.
 Notes:
 - After clearing several rows, the game enters the next level!
 - With each level, the lock cycle becomes faster and faster.
-- Leveling and scoring constants can be modified simply.
+- Leveling and scoring constants are easily modifiable.
+- Satisfies some of the <a href="http://tetris.wikia.com/wiki/Tetris_Guideline">Tetris Guideline</a>.
+- Have not implemented twists, T Spins, wall kicks.
+- Implemented the Ghost Tetromino function!
+- Youtube <a href="http://www.youtube.com/watch?v=FArcotlUUeU">video1</a>, <a href="http://www.youtube.com/watch?v=jcHfOqqhl6U">video2</a>
