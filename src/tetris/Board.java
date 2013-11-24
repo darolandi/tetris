@@ -110,11 +110,10 @@ public class Board {
     }
     if(currentTetro == null){
       spawnTetromino();
-    }else{
-      moveDown();
-      System.out.println(currentTetro);
-    }
-    // move down playing piece
+    }else if( canMoveDown() ){
+      // notice redundant canMoveDown() call
+      moveDown();      
+    }    
     // if not possible, call thud()
   }
   
@@ -177,7 +176,9 @@ public class Board {
    * Move the Tetromino to the down.
    */
   public void moveDown(){
-    // check if allowed
+    if(! canMoveDown()){      
+      return;
+    }
     
     Block tempBlock = currentTetro.getBlock(0);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
@@ -200,11 +201,58 @@ public class Board {
     currentTetro.moveDown();
   }
   
+  private boolean canMoveDown(){    
+    // loop unrolling for performance
+    Block tempBlock = currentTetro.getBlock(0);
+    int targetRow = (int)tempBlock.getGridY() +1;
+    if(targetRow >= HEIGHT){
+      return false;
+    }
+    Block targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(1);
+    targetRow = (int)tempBlock.getGridY() +1;
+    if(targetRow >= HEIGHT){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(2);
+    targetRow = (int)tempBlock.getGridY() +1;
+    if(targetRow >= HEIGHT){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(3);
+    targetRow = (int)tempBlock.getGridY() +1;
+    if(targetRow >= HEIGHT){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    return true;
+  }
+  
   /**
    * Move the Tetromino to the left.
    */
   public void moveLeft(){
-    // check if allowed
+    if(! canMoveLeft()){
+      return;
+    }
     
     Block tempBlock = currentTetro.getBlock(0);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
@@ -227,11 +275,58 @@ public class Board {
     currentTetro.moveLeft();
   }
   
+  private boolean canMoveLeft(){
+    // loop unrolling for performance
+    Block tempBlock = currentTetro.getBlock(0);
+    int targetCol = (int)tempBlock.getGridX() -1;
+    if(targetCol < 0){
+      return false;
+    }
+    Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(1);
+    targetCol = (int)tempBlock.getGridX() -1;
+    if(targetCol < 0){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(2);
+    targetCol = (int)tempBlock.getGridX() -1;
+    if(targetCol < 0){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(3);
+    targetCol = (int)tempBlock.getGridX() -1;
+    if(targetCol < 0){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    return true;
+  }
+  
   /**
    * Move the Tetromino to the right.
    */
-  public void moveRight(){
-    // check if allowed
+  public void moveRight(){    
+    if(! canMoveRight()){
+      return;
+    }
     
     Block tempBlock = currentTetro.getBlock(0);
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
@@ -252,6 +347,51 @@ public class Board {
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
     
     currentTetro.moveRight();
+  }
+  
+  private boolean canMoveRight(){
+    // loop unrolling for performance
+    Block tempBlock = currentTetro.getBlock(0);
+    int targetCol = (int)tempBlock.getGridX() +1;
+    if(targetCol >= WIDTH){
+      return false;
+    }
+    Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(1);
+    targetCol = (int)tempBlock.getGridX() +1;
+    if(targetCol >= WIDTH){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(2);
+    targetCol = (int)tempBlock.getGridX() +1;
+    if(targetCol >= WIDTH){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    tempBlock = currentTetro.getBlock(3);
+    targetCol = (int)tempBlock.getGridX() +1;
+    if(targetCol >= WIDTH){
+      return false;
+    }
+    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
+    if(targetBlock != null && !currentTetro.hasBlock(tempBlock) ){
+      return false;
+    }
+    
+    return true;
   }
   
 }

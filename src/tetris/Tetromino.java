@@ -81,6 +81,21 @@ public class Tetromino {
   }
   
   /**
+   * Returns true if that Block is a part of this Tetromino.
+   * 
+   * @param block Block in question.
+   * @return True if that Block is a part of this Tetromino.
+   */
+  public boolean hasBlock(Block block){
+    // just test by reference is sufficient
+    if(block == blocks[0] || block == blocks[1]
+            || block == blocks[2] || block == blocks[3]){
+      return true;
+    }
+    return false;
+  }
+  
+  /**
    * Moves this Tetromino to the SpawnPoint in Waiting Room (above Game).
    */
   public void moveToSpawn(Block[][] grid){
@@ -89,7 +104,8 @@ public class Tetromino {
     float spawnY = spawnPoint.getY();
     
     refX = Board.GAME_OFFSETX + spawnX*Board.BLOCK_SIZE;
-    refY = Board.GAME_OFFSETY + (spawnY - Board.HEIGHT_WAITING)*Board.BLOCK_SIZE;
+    refY = Board.GAME_OFFSETY + (spawnY - Board.HEIGHT_WAITING)*Board.BLOCK_SIZE;    
+    
     syncBlocks();
     syncGrid(grid);
   }
