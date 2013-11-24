@@ -9,6 +9,7 @@ import org.newdawn.slick.geom.Point;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -17,25 +18,27 @@ import java.util.Collections;
  * @author Daniel Rolandi
  */
 public class Board {
-  private static final int WIDTH = 10;
+  public static final int WIDTH = 10;
   private static final int HEIGHT = 26; // includes Waiting Room
   public static final int HEIGHT_WAITING = 6; // Waiting Room height
   private static final int HEIGHT_GAME = HEIGHT - HEIGHT_WAITING;
   
-  public static final float GAME_OFFSETX = 40.0f;
-  public static final float GAME_OFFSETY = 40.0f;
   private static final Color GAME_BACKGROUND = new Color(0, 0, 0);
   private static final Color GAME_BORDER = new Color(255, 255, 255);
   
-  public static final int BLOCK_SIZE = 20; // pixels
-  
-  public boolean debugMode = false;
-  
-  public static final float NEXT_TETRO_OFFSETX = GAME_OFFSETX*2 + WIDTH*BLOCK_SIZE;
-  public static final float NEXT_TETRO_OFFSETY = GAME_OFFSETY;
+  public static final int BLOCK_SIZE = 20; // pixels      
   public static final float NEXT_TETRO_SIZE = 6 * BLOCK_SIZE;
   private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
-  private static final Color NEXT_TETRO_BORDER = GAME_BORDER;    
+  private static final Color NEXT_TETRO_BORDER = GAME_BORDER;
+  
+  private static final int BASE_LOCK_DELAY = 1000;
+  private static final int LOCK_DELAY_DECREMENT_PER_LEVEL = 50;
+  private static final int CLEARS_PER_LEVEL = 4;
+  
+  private static int lockDelay; // milliseconds
+  private int lockCounter; // milliseconds
+  
+  public boolean debugMode = false;
   
   private GameContainer gc;
   private Block[][] grid;
@@ -43,6 +46,8 @@ public class Board {
   private Tetromino nextTetro;
   private ArrayDeque<TetrominoType> nextTypes;
   private ScoreKeeper scoreKeeper;
+  private boolean isDefeat;
+  private int clearCounter;
   
   
   /**
@@ -75,11 +80,18 @@ public class Board {
     provider.bindCommand( Commands.dumpGridKey, Commands.dumpGrid);
   }
   
-  private void newGame(){
+  /**
+   * Starts a fresh, new game.
+   */
+  public final void newGame(){
     grid = new Block[HEIGHT][WIDTH];
+    lockDelay = BASE_LOCK_DELAY;
+    lockCounter = 0;
     currentTetro = null;
     nextTypes = new ArrayDeque<>(8);
     scoreKeeper = new ScoreKeeper();
+    clearCounter = 0;
+    isDefeat = false;
     selectNextTetro();
     
   }  
@@ -102,23 +114,20 @@ public class Board {
     float spawnY = spawnPoint.getY();
         
     nextTetro = new Tetromino( type,
-            NEXT_TETRO_OFFSETX + (spawnX-2)*BLOCK_SIZE,
-            NEXT_TETRO_OFFSETY + (spawnY-1)*BLOCK_SIZE );
+            Offsets.NEXT_TETRO_X + (spawnX-2)*BLOCK_SIZE,
+            Offsets.NEXT_TETRO_Y + (spawnY-1)*BLOCK_SIZE );
   }
   
   private TetrominoType getNextTetroType(){
     if( nextTypes.isEmpty() ){
-//      refillNextTypes();      
-      return TetrominoType.O;
+      refillNextTypes();
     }
     return nextTypes.removeLast();    
   }
   
   private void refillNextTypes(){
     ArrayList<TetrominoType> newBag = new ArrayList<>(7);
-    for(TetrominoType type : TetrominoType.values() ){
-      newBag.add(type);
-    }
+    newBag.addAll(Arrays.asList(TetrominoType.values()));
     Collections.shuffle(newBag);
     for(TetrominoType type : newBag){
       nextTypes.addLast(type);
@@ -130,9 +139,12 @@ public class Board {
    * 
    * @param gc 
    */
-  public void tick(GameContainer gc){    
+  public void tick(GameContainer gc){
     if(debugMode){
       System.out.println("Tick!");
+    }
+    if(isDefeat){
+      return;
     }
     if(currentTetro == null){
       spawnTetromino();
@@ -146,9 +158,27 @@ public class Board {
   
   // current playing Tetromino reaches stop
   private void thud(){
-//    checkDefeat();
+    checkDefeat();
+    if(isDefeat){
+      return;
+    }
     attemptClearRows();
-    spawnTetromino();
+    spawnTetromino();    
+  }
+  
+  private void checkDefeat(){
+    // defeat happens if any Block crosses into the Waiting Room
+    for(int col = 0; col < WIDTH; col++){
+      if(grid[HEIGHT_WAITING - 1][col] != null){
+        defeat();
+        break;
+      }
+    }
+  }
+  
+  private void defeat(){
+    isDefeat = true;    
+    currentTetro = null; // remove control from Player
   }
   
   private void attemptClearRows(){
@@ -174,6 +204,11 @@ public class Board {
     if(clearedRows.size() > 0){
       clearRows( clearedRows );
       scoreKeeper.clearedRows( clearedRows.size() );
+      clearCounter += clearedRows.size();
+      if(clearCounter >= CLEARS_PER_LEVEL){
+        scoreKeeper.levelUp( clearCounter/CLEARS_PER_LEVEL );
+        clearCounter %= CLEARS_PER_LEVEL;        
+      }
     }
   }
   
@@ -206,6 +241,24 @@ public class Board {
   }
   
   /**
+   * Advances the clock.
+   * 
+   * @param gc Game Container.
+   * @param dt Time interval.
+   */
+  public void update(GameContainer gc, int dt){
+    updateTicker(gc, dt);
+  }
+  
+  private void updateTicker(GameContainer gc, int dt){
+    lockCounter += dt;
+    if(lockCounter >= lockDelay){
+      lockCounter = 0;
+      tick(gc);      
+    }
+  }
+  
+  /**
    * Renders the Tetrominos and the game field.
    * @param gc Game Container.
    * @param g Graphics context.
@@ -216,6 +269,9 @@ public class Board {
     renderTetromino(gc, g);
     scoreKeeper.render(gc, g);
     
+    if(isDefeat){
+      renderGameOver(gc, g);
+    }
     if(debugMode){
       renderMouse(gc, g);
     }
@@ -223,16 +279,16 @@ public class Board {
       
   private void renderGameField(GameContainer gc, Graphics g){
     g.setColor( GAME_BACKGROUND );
-    g.fillRect( GAME_OFFSETX, GAME_OFFSETY, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
+    g.fillRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
     g.setColor( GAME_BORDER );
-    g.drawRect( GAME_OFFSETX, GAME_OFFSETY, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
+    g.drawRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
   }    
   
   private void renderNextTetroField(GameContainer gc, Graphics g){
     g.setColor( NEXT_TETRO_BACKGROUND );
-    g.fillRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
+    g.fillRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
     g.setColor( NEXT_TETRO_BORDER );
-    g.drawRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
+    g.drawRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
   }    
   
   private void renderTetromino(GameContainer gc, Graphics g){
@@ -249,10 +305,15 @@ public class Board {
     
   }    
   
+  private void renderGameOver(GameContainer gc, Graphics g){    
+    g.setColor( Color.white);
+    g.drawString("GAME OVER !", Offsets.GAMEOVER_X, Offsets.GAMEOVER_Y);
+  }
+  
   private void renderMouse(GameContainer gc, Graphics g){
     Input input = gc.getInput();
     g.setColor( Color.white);
-    g.drawString(input.getMouseX() + ", " + input.getMouseY(), 550, 450);
+    g.drawString(input.getMouseX() + ", " + input.getMouseY(), Offsets.MOUSE_X, Offsets.MOUSE_Y);
   }
   
   /**

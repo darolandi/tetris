@@ -16,10 +16,7 @@ public class Tetris extends BasicGame{
   private static final int WINDOW_WIDTH = 640;
   private static final int WINDOW_HEIGHT = 480;
   private static final boolean FULLSCREEN = false;
-  private static final Color BACKGROUND = new Color(112, 48, 160);
-  
-  private static final int LOCK_DELAY = 1000; // milliseconds
-  private int lockCounter = 0; // milliseconds
+  private static final Color BACKGROUND = new Color(112, 48, 160);    
   
   private Board board;
   
@@ -39,29 +36,21 @@ public class Tetris extends BasicGame{
   @Override
   public void init(GameContainer gc) throws SlickException{
     gc.setShowFPS(false);
-    board = new Board(gc);
-    lockCounter = 0 ;
+    board = new Board(gc);    
   }
   
   /**
    * Updates the board and the ticker (responsible for locking).
    * 
    * @param gc Game Container.
-   * @param dt Interval.
+   * @param dt Time interval.
    * @throws SlickException 
    */
   @Override
   public void update(GameContainer gc, int dt) throws SlickException{    
-    updateTicker(gc, dt);
-  }
-  
-  private void updateTicker(GameContainer gc, int dt){
-    lockCounter += dt;
-    if(lockCounter >= LOCK_DELAY){
-      lockCounter = 0;
-      board.tick(gc);      
-    }
-  }
+    board.update(gc, dt);
+    
+  }  
   
   /**
    * Renders the game and the board in it.

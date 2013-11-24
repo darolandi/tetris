@@ -103,8 +103,8 @@ public class Tetromino {
     float spawnX = spawnPoint.getX();
     float spawnY = spawnPoint.getY();
     
-    refX = Board.GAME_OFFSETX + spawnX*Board.BLOCK_SIZE;
-    refY = Board.GAME_OFFSETY + (spawnY - Board.HEIGHT_WAITING)*Board.BLOCK_SIZE;    
+    refX = Offsets.GAME_X + spawnX*Board.BLOCK_SIZE;
+    refY = Offsets.GAME_Y + (spawnY - Board.HEIGHT_WAITING)*Board.BLOCK_SIZE;    
     
     syncBlocks();
     syncGrid(grid);

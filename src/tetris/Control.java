@@ -31,6 +31,8 @@ public class Control implements InputProviderListener{
       board.moveRight();
     }else if( command.equals(Commands.hardDrop) ){
       board.hardDrop();
+    }else if( command.equals(Commands.newGame) ){
+      board.newGame();
     }
     
     if(board.debugMode){
