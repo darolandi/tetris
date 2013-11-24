@@ -22,13 +22,23 @@ public class Tetromino {
   private float refX;
   private float refY;
   private int state;
+  private boolean ghost;
   
-  public Tetromino(TetrominoType type, float x, float y){
+  public Tetromino(TetrominoType type, float x, float y, boolean ghost){
+    this(type, x, y, ghost, 0);
+  }
+  
+  public Tetromino(TetrominoType type, float x, float y, boolean ghost, int state){
     this.type = type;
     refX = x;
     refY = y;    
-    state = 0;
-    createBlocks();
+    this.state = state;
+    this.ghost = ghost;
+    if(ghost){
+      createGhostBlocks();
+    }else{
+      createBlocks();
+    }    
     syncBlocks();
   }
   
@@ -38,6 +48,15 @@ public class Tetromino {
     blocks[1] = new Block(type, refX, refY);
     blocks[2] = new Block(type, refX, refY);
     blocks[3] = new Block(type, refX, refY);
+    // notice that the blocks are not at their proper positions yet
+  }
+  
+  private void createGhostBlocks(){
+    blocks = new Block[4];
+    blocks[0] = new GhostBlock(type, refX, refY);
+    blocks[1] = new GhostBlock(type, refX, refY);
+    blocks[2] = new GhostBlock(type, refX, refY);
+    blocks[3] = new GhostBlock(type, refX, refY);
     // notice that the blocks are not at their proper positions yet
   }
   
@@ -124,9 +143,14 @@ public class Tetromino {
                         refY + points[3].getY() * Board.BLOCK_SIZE);    
   }  
   
-  // expected to be called only during move-to-spawn
-  // or when rotating
-  private void syncGrid(Block[][] grid){
+  /**
+   * Plugs this Block into the Grid.
+   * Expected to be called only during move-to-spawn
+   * or when rotating or when moving currentRetro over ghostRetro.
+   * 
+   * @param grid Grid of Blocks from the Board.
+   */  
+  public void syncGrid(Block[][] grid){
     Block tempBlock;
     // loop unrolling for performance
     tempBlock = blocks[0];
@@ -139,7 +163,8 @@ public class Tetromino {
     grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
   }
   
-  // expected to be called only when rotating
+  // expected to be called only during rotating
+  // or when killing Tetromino
   private void unsyncGrid(Block[][] grid){
     Block tempBlock;
     // loop unrolling for performance
@@ -182,90 +207,147 @@ public class Tetromino {
   
   /**
    * Rotates the Tetromino counter-clockwise.
+   * 
    * @param grid Grid of Blocks from the Board.
+   * @param board Connection to Board.
    */
-  public void rotateLeft(Block[][] grid){
+  public void rotateLeft(Block[][] grid, Board board){
     unsyncGrid(grid);    
-    if( canRotateLeft(grid)){
+    if( canRotateLeft(grid, board)){      
       state = (state + 3)%4;
+      board.killGhostTetro();
+      board.summonGhostTetromino(state);
       syncBlocks();      
     }
     syncGrid(grid);
-  }
-  
-  private boolean canRotateLeft(Block[][] grid){
-    int futureState = (state + 3)%4;
-    Point[] points = TetrominoInfo.getPoints(type)[futureState];
-    int gridX;
-    int gridY;
-    
-    // loop unrolling for performance
-    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[0].getX() );
-    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[0].getY() + Board.HEIGHT_WAITING );
-    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
-      return false;
-    }
-    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[1].getX() );
-    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[1].getY() + Board.HEIGHT_WAITING );
-    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
-      return false;
-    }
-    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[2].getX() );
-    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[2].getY() + Board.HEIGHT_WAITING );
-    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
-      return false;
-    }
-    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[3].getX() );
-    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[3].getY() + Board.HEIGHT_WAITING );
-    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
-      return false;
-    }
-    
-    return true;
   }
   
   /**
-   * Rotates the Tetromino clockwise.
+   * Returns true if this Tetromino can rotate counter-clockwise.
+   * 
    * @param grid Grid of Blocks from the Board.
+   * @param board Connection to Board.
+   * @return True if this Tetromino can rotate counter-clockwise.
    */
-  public void rotateRight(Block[][] grid){
-    unsyncGrid(grid);
-    if( canRotateRight(grid)){
-      state = (state + 1)%4;
-      syncBlocks();      
-    }
-    syncGrid(grid);
+  public boolean canRotateLeft(Block[][] grid, Board board){
+    int futureState = (state + 3)%4;
+    return canRotate(grid, futureState, board);
   }
   
-  private boolean canRotateRight(Block[][] grid){
-    int futureState = (state + 1)%4;
+  private boolean canRotate(Block[][] grid, int futureState, Board board){
     Point[] points = TetrominoInfo.getPoints(type)[futureState];
     int gridX;
     int gridY;
+    Block targetBlock;
     
     // loop unrolling for performance
     gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[0].getX() );
     gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[0].getY() + Board.HEIGHT_WAITING );
-    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+    if( outOfBounds(gridX, gridY) ){
       return false;
     }
+    targetBlock = grid[gridY][gridX];
+    if( board.unpathableBlock(targetBlock) ){
+      return false;
+    }
+    
     gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[1].getX() );
     gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[1].getY() + Board.HEIGHT_WAITING );
-    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+    if( outOfBounds(gridX, gridY) ){
       return false;
     }
+    targetBlock = grid[gridY][gridX];
+    if( board.unpathableBlock(targetBlock) ){
+      return false;
+    }
+    
     gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[2].getX() );
     gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[2].getY() + Board.HEIGHT_WAITING );
-    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+    if( outOfBounds(gridX, gridY) ){
       return false;
     }
+    targetBlock = grid[gridY][gridX];
+    if( board.unpathableBlock(targetBlock) ){
+      return false;
+    }
+    
     gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[3].getX() );
     gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[3].getY() + Board.HEIGHT_WAITING );
-    if(gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT || grid[gridY][gridX] != null){
+    if( outOfBounds(gridX, gridY) ){
+      return false;
+    }
+    targetBlock = grid[gridY][gridX];
+    if( board.unpathableBlock(targetBlock) ){
       return false;
     }
     
     return true;
+  }
+  
+  private boolean outOfBounds(int gridX, int gridY){
+    return gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT;
+  }    
+  
+  /**
+   * Rotates the Tetromino clockwise.
+   * 
+   * @param grid Grid of Blocks from the Board.
+   * @param board Connection to Board.
+   */
+  public void rotateRight(Block[][] grid, Board board){
+    unsyncGrid(grid);
+    if( canRotateRight(grid, board)){
+      state = (state + 1)%4;
+      board.killGhostTetro();
+      board.summonGhostTetromino(state);
+      syncBlocks();      
+    }
+    syncGrid(grid);    
+  }
+  
+  /**
+   * Returns true if this Tetromino can rotate clockwise.
+   * 
+   * @param grid Grid of Blocks from the Board.
+   * @param board Connection to Board.
+   * @return True if this Tetromino can rotate clockwise.
+   */
+  public boolean canRotateRight(Block[][] grid, Board board){
+    int futureState = (state + 1)%4;
+    return canRotate(grid, futureState, board);
+  }
+  
+  /**
+   * Returns the orientation state of this Tetromino.
+   * 
+   * @return The orientation state of this Tetromino.
+   */
+  public int getState(){
+    return state;
+  }
+  
+  /**
+   * Returns the type of this Tetromino.
+   * 
+   * @return The type of this Tetromino.
+   */
+  public TetrominoType getType(){
+    return type;
+  }
+  
+  /**
+   * Kills this Tetromino, removing from Grid permanently.
+   * Expected to be used with only Ghost Tetromino.
+   * 
+   * @param grid Grid of Blocks from the Board.
+   */
+  public void kill(Block[][] grid){
+    unsyncGrid(grid);
+    blocks[0] = null;
+    blocks[1] = null;
+    blocks[2] = null;
+    blocks[3] = null;
+    blocks = null;
   }
   
   @Override

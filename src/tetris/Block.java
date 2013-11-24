@@ -13,7 +13,7 @@ import org.newdawn.slick.Graphics;
 public class Block {
   public static final Color border = new Color(255, 255, 255);    
   
-  private TetrominoType type;
+  protected TetrominoType type;
   public float x;
   public float y;
   
@@ -30,7 +30,7 @@ public class Block {
   }
   
   /**
-   * Draws the Block onto the GameContainer, color-filled and bordered.
+   * Draws the Block onto the GameContainer.
    * 
    * @param gc Game Container.
    * @param g Graphics context.
