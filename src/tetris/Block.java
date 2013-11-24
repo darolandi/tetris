@@ -43,6 +43,22 @@ public class Block {
   }
   
   /**
+   * Returns col position in the grid.
+   * @return Col position in the grid.
+   */
+  public int getGridX(){
+    return (int)( (x - Board.GAME_OFFSETX) / Board.BLOCK_SIZE);
+  }
+  
+  /**
+   * Returns row position in the grid.
+   * @return Row position in the grid.
+   */
+  public int getGridY(){
+    return (int)( (y - Board.GAME_OFFSETY) / Board.BLOCK_SIZE);
+  }
+  
+  /**
    * Sets topleft corner into the given (x,y) coordinate.
    * 
    * @param x X coordinate of topleft corner.

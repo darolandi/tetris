@@ -24,6 +24,8 @@ public class Board {
   
   public static final int BLOCK_SIZE = 20; // pixels
   
+  public boolean debugMode = false;
+  
   private static final float NEXT_TETRO_OFFSETX = GAME_OFFSETX*2 + WIDTH*BLOCK_SIZE;
   private static final float NEXT_TETRO_OFFSETY = GAME_OFFSETY;
   private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
@@ -31,8 +33,9 @@ public class Board {
   
   private GameContainer gc;
   private Block[][] grid;
-  private Tetromino currentTetromino;
-  private Tetromino nextTetromino;
+  private Tetromino currentTetro;
+  private Tetromino nextTetro;
+  
   
   /**
    * Inits the Board (includes game field and Next-Tetromino).
@@ -65,28 +68,28 @@ public class Board {
   
   private void newGame(){
     grid = new Block[WIDTH][HEIGHT];
-    currentTetromino = null;
-    selectNextTetromino();
+    currentTetro = null;
+    selectNextTetro();
   }  
   
   private void spawnTetromino(){
-    currentTetromino = nextTetromino;
+    currentTetro = nextTetro;
     moveNewTetromino();
-    selectNextTetromino();
+    selectNextTetro();
   }
   
-  // PRECONDITION: currentTetromino pointing to new Tetromino
+  // PRECONDITION: currentTetro pointing to new Tetromino
   private void moveNewTetromino(){
-    currentTetromino.moveToSpawn();
+    currentTetro.moveToSpawn(grid);    
   }
   
-  private void selectNextTetromino(){
+  private void selectNextTetro(){
     TetrominoInfo type = TetrominoInfo.getRandom();
     Point spawnPoint = TetrominoInfo.getSpawnPoint( type );
     float spawnX = spawnPoint.getX();
     float spawnY = spawnPoint.getY();
         
-    nextTetromino = new Tetromino( type,
+    nextTetro = new Tetromino( type,
             NEXT_TETRO_OFFSETX + (spawnX-2)*BLOCK_SIZE,
             NEXT_TETRO_OFFSETY + (spawnY-1)*BLOCK_SIZE );
   }
@@ -100,7 +103,10 @@ public class Board {
    * 
    * @param gc 
    */
-  public void tick(GameContainer gc){
+  public void tick(GameContainer gc){    
+    if(debugMode){
+      System.out.println("Tick!");
+    }
     // move down playing piece
     // if not possible, call thud()
   }
@@ -118,7 +124,7 @@ public class Board {
    */
   public void render(GameContainer gc, Graphics g){
     renderGameField(gc, g);
-    renderNextTetrominoField(gc, g);
+    renderNextTetroField(gc, g);
     renderTetromino(gc, g);    
   }    
       
@@ -129,8 +135,15 @@ public class Board {
     g.drawRect( GAME_OFFSETX, GAME_OFFSETY, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
   }    
   
+  private void renderNextTetroField(GameContainer gc, Graphics g){
+    g.setColor( NEXT_TETRO_BACKGROUND );
+    g.fillRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
+    g.setColor( NEXT_TETRO_BORDER );
+    g.drawRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
+  }    
+  
   private void renderTetromino(GameContainer gc, Graphics g){
-    nextTetromino.render(gc, g);    
+    nextTetro.render(gc, g);    
     
 //    for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
 //      Block temp = grid[row][0];
@@ -139,13 +152,51 @@ public class Board {
 //      }      
 //    }
     
+  }    
+  
+  public void moveDown(){
+    // check if allowed
+    
   }
   
-  private void renderNextTetrominoField(GameContainer gc, Graphics g){
-    g.setColor( NEXT_TETRO_BACKGROUND );
-    g.fillRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
-    g.setColor( NEXT_TETRO_BORDER );
-    g.drawRect( NEXT_TETRO_OFFSETX, GAME_OFFSETY, 6 * BLOCK_SIZE, 6 * BLOCK_SIZE );
-  }    
+  public void moveLeft(){
+    // check if allowed
+    
+    Block tempBlock = currentTetro.getBlock(0);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+    
+    tempBlock = currentTetro.getBlock(1);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+    
+    tempBlock = currentTetro.getBlock(2);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+    
+    tempBlock = currentTetro.getBlock(3);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+  }
+  
+  public void moveRight(){
+    // check if allowed
+    
+    Block tempBlock = currentTetro.getBlock(0);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
+    
+    tempBlock = currentTetro.getBlock(1);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
+    
+    tempBlock = currentTetro.getBlock(2);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+    
+    tempBlock = currentTetro.getBlock(3);
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+  }
   
 }

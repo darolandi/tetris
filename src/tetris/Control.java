@@ -21,7 +21,15 @@ public class Control implements InputProviderListener{
    */
   @Override
   public void controlPressed(Command command){
-    
+    if( command.equals(Commands.debugMode) ){
+      board.debugMode = !board.debugMode;
+    }else if( command.equals(Commands.moveDown) ){
+      board.moveDown();
+    }else if( command.equals(Commands.moveLeft) ){
+      board.moveLeft();
+    }else if( command.equals(Commands.moveRight) ){
+      board.moveRight();
+    }
   }
   
   /**
