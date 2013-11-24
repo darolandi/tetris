@@ -18,6 +18,7 @@ copy ..\..\..\lib\native\* .
 
 cd ..\..
 del README.txt
+del ..\Tetris.zip
 7za a -tzip Tetris *
 move Tetris.zip ..
 
