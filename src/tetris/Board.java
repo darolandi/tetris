@@ -42,18 +42,17 @@ public class Board {
       throw new IllegalStateException("Could not load music.");
     }
   }
-
-  private static final int BASE_LOCK_DELAY = 800;
-  private static final int MIN_LOCK_DELAY = 150;
-  private static final int LOCK_DELAY_DECREMENT_PER_LEVEL = 120;
-  private static final int CLEARS_PER_LEVEL = 2;
+  
+  private static final int BASE_LOCK_DELAY = 1000;
+  private static final int MIN_LOCK_DELAY = 100;
+  private static final int LOCK_DELAY_DECREMENT_PER_LEVEL = 80;
+  private static final int CLEARS_PER_LEVEL = 4;
 
   private static int lockDelay; // milliseconds
-  private int lockCounter; // milliseconds
+  private int lockCounter; // milliseconds  
 
   public boolean debugMode = false;
-
-  private GameContainer gc;
+  
   private Block[][] grid;
   private Tetromino currentTetro;
   private Tetromino nextTetro;
@@ -71,11 +70,10 @@ public class Board {
    *
    * @param gc Game Container.
    */
-  public Board(GameContainer gc){
-    this.gc = gc;
+  public Board(GameContainer gc){    
     bgm.loop();
     musicVolume = 1;
-    setupControl();
+    setupControl(gc);
     newGame();
     defeat();
   }
@@ -87,8 +85,10 @@ public class Board {
     defeat();
   }
 
-  private void setupControl(){
-    InputProvider provider = new InputProvider( gc.getInput() );
+  private void setupControl(GameContainer gc){
+    Input input = gc.getInput();
+    input.enableKeyRepeat();
+    InputProvider provider = new InputProvider( input );
     provider.addListener( new Control(this) );
 
     provider.bindCommand( Commands.moveLeftKey, Commands.moveLeft);
@@ -113,7 +113,7 @@ public class Board {
   public final void newGame(){
     grid = new Block[HEIGHT][WIDTH];
     lockDelay = BASE_LOCK_DELAY;
-    lockCounter = 0;
+    lockCounter = 0;    
     currentTetro = null;
     ghostTetro = null;
     nextTypes = new ArrayDeque<>(8);
@@ -185,28 +185,6 @@ public class Board {
     for(TetrominoType type : newBag){
       nextTypes.addLast(type);
     }
-  }
-
-  /**
-   * Ticks the Tetris clock for locking.
-   *
-   * @param gc
-   */
-  public void tick(GameContainer gc){
-    if(debugMode){
-      System.out.println("Tick!");
-    }
-    if(isDefeat){
-      return;
-    }
-    if(currentTetro == null){
-      spawnTetromino();
-    }else if( canMoveDown() ){
-      moveDownWithoutCheck();
-    }else{
-      thud();
-    }
-    // if not possible, call thud()
   }
 
   // current playing Tetromino reaches stop
@@ -312,9 +290,25 @@ public class Board {
     if(lockCounter >= lockDelay){
       lockCounter = 0;
       tick(gc);
-    }
+    }    
   }
-
+    
+  private void tick(GameContainer gc){
+    if(debugMode){
+      System.out.println("Tick!");
+    }
+    if(isDefeat){
+      return;
+    }
+    if(currentTetro == null){
+      spawnTetromino();
+    }else if( canMoveDown() ){
+      moveDownWithoutCheck();
+    }else{
+      thud();
+    }    
+  }
+    
   /**
    * Renders the Tetrominos and the game field.
    * @param gc Game Container.
