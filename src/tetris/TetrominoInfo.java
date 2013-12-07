@@ -15,32 +15,32 @@ public class TetrominoInfo {
   public static final int BLOCK_COUNT = 4;
   public static final int TYPE_COUNT = TetrominoType.values().length;
   
-  private static final Color Icolor = new Color(0, 255, 255);
-  private static final Color Zcolor = new Color(255, 0, 0);
-  private static final Color Scolor = new Color(0, 255, 0);
-  private static final Color Ocolor = new Color(255, 255, 0);
-  private static final Color Tcolor = new Color(255, 0, 255);
-  private static final Color Lcolor = new Color(255, 127, 0);
-  private static final Color Jcolor = new Color(0, 0, 255);
+  private static final Color I_COLOR = new Color(0, 255, 255);
+  private static final Color Z_COLOR = new Color(255, 0, 0);
+  private static final Color S_COLOR = new Color(0, 255, 0);
+  private static final Color O_COLOR = new Color(255, 255, 0);
+  private static final Color T_COLOR = new Color(255, 0, 255);
+  private static final Color L_COLOR = new Color(255, 127, 0);
+  private static final Color J_COLOR = new Color(0, 0, 255);
   
-  private static final Image Iimage;
-  private static final Image Zimage;
-  private static final Image Simage;
-  private static final Image Oimage;
-  private static final Image Timage;
-  private static final Image Limage;
-  private static final Image Jimage;
+  private static final Image I_IMAGE;
+  private static final Image Z_IMAGE;
+  private static final Image S_IMAGE;
+  private static final Image O_IMAGE;
+  private static final Image T_IMAGE;
+  private static final Image L_IMAGE;
+  private static final Image J_IMAGE;
   static{
     try{
-      Iimage = new Image("images/I.png");
-      Zimage = new Image("images/Z.png");
-      Simage = new Image("images/S.png");
-      Oimage = new Image("images/O.png");
-      Timage = new Image("images/T.png");
-      Limage = new Image("images/L.png");
-      Jimage = new Image("images/J.png");      
+      I_IMAGE = new Image("_IMAGEs/I.png");
+      Z_IMAGE = new Image("_IMAGEs/Z.png");
+      S_IMAGE = new Image("_IMAGEs/S.png");
+      O_IMAGE = new Image("_IMAGEs/O.png");
+      T_IMAGE = new Image("_IMAGEs/T.png");
+      L_IMAGE = new Image("_IMAGEs/L.png");
+      J_IMAGE = new Image("_IMAGEs/J.png");      
     }catch(SlickException e){
-      throw new IllegalStateException("Could not load images.");
+      throw new IllegalStateException("Could not load _IMAGEs.");
     }
   }
     
@@ -117,13 +117,13 @@ public class TetrominoInfo {
    */
   public static Color getColor(TetrominoType type){
     switch(type){
-      case I: return Icolor;
-      case Z: return Zcolor;
-      case S: return Scolor;
-      case O: return Ocolor;
-      case T: return Tcolor;
-      case L: return Lcolor;
-      case J: return Jcolor;
+      case I: return I_COLOR;
+      case Z: return Z_COLOR;
+      case S: return S_COLOR;
+      case O: return O_COLOR;
+      case T: return T_COLOR;
+      case L: return L_COLOR;
+      case J: return J_COLOR;
       default: throw new IllegalArgumentException();
     }
   }
@@ -136,13 +136,13 @@ public class TetrominoInfo {
    */
   public static Image getImage(TetrominoType type){
     switch(type){
-      case I: return Iimage;
-      case Z: return Zimage;
-      case S: return Simage;
-      case O: return Oimage;
-      case T: return Timage;
-      case L: return Limage;
-      case J: return Jimage;
+      case I: return I_IMAGE;
+      case Z: return Z_IMAGE;
+      case S: return S_IMAGE;
+      case O: return O_IMAGE;
+      case T: return T_IMAGE;
+      case L: return L_IMAGE;
+      case J: return J_IMAGE;
       default: throw new IllegalArgumentException();
     }
   }

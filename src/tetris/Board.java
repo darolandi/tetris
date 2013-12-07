@@ -30,7 +30,7 @@ public class Board
   private static final Color GAME_BORDER = new Color(255, 255, 255);
   public static final Color WIRE_COLOR = new Color(30, 30, 30);
 
-  public static final int BLOCK_SIZE = 20; // pixels
+  public static final int BLOCK_SIZE = Block.PREFERRED_BLOCK_SIZE; // pixels
   private static final int NEXT_TETRO_PIXELS = 6;
   public static final float NEXT_TETRO_SIZE = NEXT_TETRO_PIXELS * BLOCK_SIZE;
   private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
@@ -102,20 +102,20 @@ public class Board
     InputProvider provider = new InputProvider( input );
     provider.addListener( new Control(this) );
 
-    provider.bindCommand( Commands.moveLeftKey, Commands.moveLeft);
-    provider.bindCommand( Commands.moveRightKey, Commands.moveRight);
-    provider.bindCommand( Commands.moveDownKey, Commands.moveDown);
+    provider.bindCommand( Commands.MOVE_LEFT_KEY, Commands.MOVE_LEFT);
+    provider.bindCommand( Commands.MOVE_RIGHT_KEY, Commands.MOVE_RIGHT);
+    provider.bindCommand( Commands.MOVE_DOWN_KEY, Commands.MOVE_DOWN);
 
-    provider.bindCommand( Commands.hardDropKey, Commands.hardDrop);
-    provider.bindCommand( Commands.rotateLeftKey, Commands.rotateLeft);
-    provider.bindCommand( Commands.rotateRightKey1, Commands.rotateRight);
-    provider.bindCommand( Commands.rotateRightKey2, Commands.rotateRight);
+    provider.bindCommand( Commands.HARD_DROP_KEY, Commands.HARD_DROP);
+    provider.bindCommand( Commands.ROTATE_LEFT_KEY, Commands.ROTATE_LEFT);
+    provider.bindCommand( Commands.ROTATE_RIGHT_KEY1, Commands.ROTATE_RIGHT);
+    provider.bindCommand( Commands.ROTATE_RIGHT_KEY2, Commands.ROTATE_RIGHT);
 
-    provider.bindCommand( Commands.newGameKey, Commands.newGame);
-    provider.bindCommand( Commands.endGameKey, Commands.endGame);
-    provider.bindCommand( Commands.debugModeKey, Commands.debugMode);
-    provider.bindCommand( Commands.dumpGridKey, Commands.dumpGrid);
-    provider.bindCommand( Commands.toggleMusicKey, Commands.toggleMusic );
+    provider.bindCommand( Commands.NEW_GAME_KEY, Commands.NEW_GAME);
+    provider.bindCommand( Commands.END_GAME_KEY, Commands.END_GAME);
+    provider.bindCommand( Commands.DEBUG_MODE_KEY, Commands.DEBUG_MODE);
+    provider.bindCommand( Commands.DUMP_GRID_KEY, Commands.DUMP_GRID);
+    provider.bindCommand( Commands.TOGGLE_MUSIC_KEY, Commands.TOGGLE_MUSIC );
   }
 
   /**
@@ -248,13 +248,12 @@ public class Board
 
   private void attemptClearRows()
   {
-    boolean didClearRow;
     ArrayDeque<Integer> clearedRows = new ArrayDeque<>(TetrominoInfo.BLOCK_COUNT);
+    boolean didClearRow;    
     
     int row = HEIGHT-1;
     while(row >= HEIGHT_WAITING)
     {
-
       didClearRow = true;
       for(int col = 0; col < WIDTH; col++)
       {

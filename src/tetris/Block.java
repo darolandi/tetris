@@ -10,8 +10,10 @@ import org.newdawn.slick.Graphics;
  * 
  * @author Daniel Rolandi
  */
-public class Block {
-  public static final Color border = new Color(255, 255, 255);    
+public class Block
+{
+  public static final int PREFERRED_BLOCK_SIZE = 20;
+  public static final Color BORDER_COLOR = new Color(255, 255, 255);  
   
   protected TetrominoType type;
   public float x;
@@ -23,7 +25,8 @@ public class Block {
    * @param x X coordinate of topleft oorner.
    * @param y Y coordinate of topleft corner.
    */
-  public Block(TetrominoType type, float x, float y){
+  public Block(TetrominoType type, float x, float y)
+  {
     this.type = type;
     this.x = x;
     this.y = y;
@@ -32,17 +35,20 @@ public class Block {
   /**
    * Draws the Block onto the GameContainer.
    * 
-   * @param gc Game Container.
-   * @param g Graphics context.
+   * @param gameContainer Game Container.
+   * @param graphics Graphics context.
    */
-  public void render(GameContainer gc, Graphics g){
-    if(Board.BLOCK_SIZE != 20){
-      g.setColor( TetrominoInfo.getColor(type) );
-      g.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
-      g.setColor( border );
-      g.drawRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
-    }else{
-      g.drawImage(TetrominoInfo.getImage(type), x, y);
+  public void render(GameContainer gameContainer, Graphics graphics)
+  {
+    if(Board.BLOCK_SIZE != PREFERRED_BLOCK_SIZE)
+    {
+      graphics.setColor( TetrominoInfo.getColor(type) );
+      graphics.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
+      graphics.setColor( BORDER_COLOR );
+      graphics.drawRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);
+    }
+    else{
+      graphics.drawImage(TetrominoInfo.getImage(type), x, y);
     }    
   }
   
@@ -50,7 +56,8 @@ public class Block {
    * Returns X coordinate of topleft corner.
    * @return X coordinate of topleft corner.
    */
-  public float getX(){
+  public float getX()
+  {
     return x;
   }
   
@@ -58,7 +65,8 @@ public class Block {
    * Returns Y coordinate of topleft corner.
    * @return Y coordinate of topleft corner.
    */
-  public float getY(){
+  public float getY()
+  {
     return y;
   }
   
@@ -66,7 +74,8 @@ public class Block {
    * Returns col position in the grid.
    * @return Col position in the grid.
    */
-  public int getGridX(){
+  public int getGridX()
+  {
     return (int)( (x - Offsets.GAME_X) / Board.BLOCK_SIZE);
   }
   
@@ -74,7 +83,8 @@ public class Block {
    * Returns row position in the grid.
    * @return Row position in the grid.
    */
-  public int getGridY(){
+  public int getGridY()
+  {
 //    return (int)( (y - Offsets.GAME_Y + Board.HEIGHT_WAITING*Board.BLOCK_SIZE) / Board.BLOCK_SIZE);
     return (int)( (y - Offsets.GAME_Y) / Board.BLOCK_SIZE + Board.HEIGHT_WAITING);
   }
@@ -85,7 +95,8 @@ public class Block {
    * @param x X coordinate of topleft corner.
    * @param y Y coordinate of topleft corner.
    */
-  public void setPosition(float x, float y){
+  public void setPosition(float x, float y)
+  {
     this.x = x;
     this.y = y;
   }

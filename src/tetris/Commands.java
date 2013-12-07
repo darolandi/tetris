@@ -10,33 +10,34 @@ import org.newdawn.slick.command.KeyControl;
  * 
  * @author Daniel Rolandi
  */
-public class Commands {
-  public static final Command moveLeft = new BasicCommand("moveLeft");
-  public static final Command moveRight = new BasicCommand("moveRight");
-  public static final Command moveDown = new BasicCommand("moveDown");  
+public class Commands
+{
+  public static final Command MOVE_LEFT = new BasicCommand("move_left");
+  public static final Command MOVE_RIGHT = new BasicCommand("move_right");
+  public static final Command MOVE_DOWN = new BasicCommand("move_down");  
   
-  public static final Command hardDrop = new BasicCommand("hardDrop");
-  public static final Command rotateLeft = new BasicCommand("rotateLeft");
-  public static final Command rotateRight = new BasicCommand("rotateRight");
+  public static final Command HARD_DROP = new BasicCommand("hard_drop");
+  public static final Command ROTATE_LEFT = new BasicCommand("rotate_left");
+  public static final Command ROTATE_RIGHT = new BasicCommand("rotate_right");
   
-  public static final Command newGame = new BasicCommand("newGame");
-  public static final Command endGame = new BasicCommand("endGame");
-  public static final Command debugMode = new BasicCommand("debugMode");
-  public static final Command dumpGrid = new BasicCommand("dumpGrid");
-  public static final Command toggleMusic = new BasicCommand("toggleMusic");
+  public static final Command NEW_GAME = new BasicCommand("new_game");
+  public static final Command END_GAME = new BasicCommand("end_game");
+  public static final Command DEBUG_MODE = new BasicCommand("debug_mode");
+  public static final Command DUMP_GRID = new BasicCommand("dump_grid");
+  public static final Command TOGGLE_MUSIC = new BasicCommand("toggle_music");
   
-  public static final KeyControl moveLeftKey = new KeyControl(Input.KEY_LEFT);
-  public static final KeyControl moveRightKey = new KeyControl(Input.KEY_RIGHT);
-  public static final KeyControl moveDownKey = new KeyControl(Input.KEY_DOWN);  
+  public static final KeyControl MOVE_LEFT_KEY = new KeyControl(Input.KEY_LEFT);
+  public static final KeyControl MOVE_RIGHT_KEY = new KeyControl(Input.KEY_RIGHT);
+  public static final KeyControl MOVE_DOWN_KEY = new KeyControl(Input.KEY_DOWN);  
   
-  public static final KeyControl hardDropKey = new KeyControl(Input.KEY_SPACE);
-  public static final KeyControl rotateLeftKey = new KeyControl(Input.KEY_Z);
-  public static final KeyControl rotateRightKey1 = new KeyControl(Input.KEY_X);
-  public static final KeyControl rotateRightKey2 = new KeyControl(Input.KEY_UP);
+  public static final KeyControl HARD_DROP_KEY = new KeyControl(Input.KEY_SPACE);
+  public static final KeyControl ROTATE_LEFT_KEY = new KeyControl(Input.KEY_Z);
+  public static final KeyControl ROTATE_RIGHT_KEY1 = new KeyControl(Input.KEY_X);
+  public static final KeyControl ROTATE_RIGHT_KEY2 = new KeyControl(Input.KEY_UP);
   
-  public static final KeyControl newGameKey = new KeyControl(Input.KEY_F1);
-  public static final KeyControl endGameKey = new KeyControl(Input.KEY_F2);
-  public static final KeyControl debugModeKey = new KeyControl(Input.KEY_ESCAPE);
-  public static final KeyControl dumpGridKey = new KeyControl(Input.KEY_G);
-  public static final KeyControl toggleMusicKey = new KeyControl(Input.KEY_M);
+  public static final KeyControl NEW_GAME_KEY = new KeyControl(Input.KEY_F1);
+  public static final KeyControl END_GAME_KEY = new KeyControl(Input.KEY_F2);
+  public static final KeyControl DEBUG_MODE_KEY = new KeyControl(Input.KEY_ESCAPE);
+  public static final KeyControl DUMP_GRID_KEY = new KeyControl(Input.KEY_G);
+  public static final KeyControl TOGGLE_MUSIC_KEY = new KeyControl(Input.KEY_M);
 }
