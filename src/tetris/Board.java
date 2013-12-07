@@ -208,7 +208,7 @@ public class Board
   }
 
   // current playing Tetromino reaches stop
-  private void thud()
+  private void tetroReachesFloor()
   {
     checkDefeat();
     if(isDefeat)
@@ -283,18 +283,15 @@ public class Board
   private void dropDownRowsAt(int startRow){
     // would be much more efficient if we could
     // store the max height of the Tetris tower
-    // and only loop that much
-    Block blockRowTo[], blockRowFrom[], temp;
+    // and only loop that much    
 
-    for(int row = startRow; row >= 1; row--){
-      blockRowTo = grid[row];
-      blockRowFrom = grid[row - 1];
+    for(int row = startRow; row >= 1; row--){      
       for(int col = 0; col < WIDTH; col++){
-        blockRowTo[col] = blockRowFrom[col];
+        grid[row][col] = grid[row - 1][col];
 
-        temp = blockRowTo[col];
-        if(temp != null){
-          temp.setPosition( temp.getX(), temp.getY() + Board.BLOCK_SIZE );
+        Block movedBlock = grid[row][col];
+        if(movedBlock != null){
+          movedBlock.setPosition( movedBlock.getX(), movedBlock.getY() + Board.BLOCK_SIZE );
         }
       }
     }
@@ -325,12 +322,17 @@ public class Board
     if(isDefeat){
       return;
     }
-    if(currentTetro == null){
+    if(currentTetro == null)
+    {
       spawnTetromino();
-    }else if( canMoveDown() ){
+    }
+    else if( canMoveDown() )
+    {
       moveDownWithoutCheck();
-    }else{
-      thud();
+    }
+    else
+    {
+      tetroReachesFloor();
     }    
   }
     
@@ -339,47 +341,55 @@ public class Board
    * @param gc Game Container.
    * @param g Graphics context.
    */
-  public void render(GameContainer gc, Graphics g){
+  public void render(GameContainer gc, Graphics g)
+  {
     renderGameField(gc, g);
     renderNextTetroField(gc, g);
     renderTetromino(gc, g);
     renderGameFieldBorder(gc, g);
     scoreKeeper.render(gc, g);
 
-    if(isDefeat){
+    if(isDefeat)
+    {
       renderGameOver(gc, g);
     }
-    if(debugMode){
+    if(debugMode)
+    {
       renderMouse(gc, g);
       renderLockDelay(gc, g);
     }
   }
 
-  private void renderGameField(GameContainer gc, Graphics g){
+  private void renderGameField(GameContainer gc, Graphics g)
+  {
     g.setColor( GAME_BACKGROUND );
     g.fillRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
     renderGameWires(gc, g);
   }
 
-  private void renderGameWires(GameContainer gc, Graphics g){
-    float temp;
+  private void renderGameWires(GameContainer gc, Graphics g)
+  {    
     g.setColor( WIRE_COLOR );
-    for(int row = 1; row < HEIGHT_GAME; row++){
-      temp = Offsets.GAME_Y + row*BLOCK_SIZE;
-      g.drawLine( Offsets.GAME_X, temp, Offsets.GAME_X + WIDTH*BLOCK_SIZE, temp);
+    for(int row = 1; row < HEIGHT_GAME; row++)
+    {
+      float wire_row = Offsets.GAME_Y + row*BLOCK_SIZE;
+      g.drawLine( Offsets.GAME_X, wire_row, Offsets.GAME_X + WIDTH*BLOCK_SIZE, wire_row);
     }
-    for(int col = 1; col < WIDTH; col++){
-      temp = Offsets.GAME_X + col*BLOCK_SIZE;
-      g.drawLine( temp, Offsets.GAME_Y, temp, Offsets.GAME_Y + HEIGHT_GAME*BLOCK_SIZE);
+    for(int col = 1; col < WIDTH; col++)
+    {
+      float wire_col = Offsets.GAME_X + col*BLOCK_SIZE;
+      g.drawLine( wire_col, Offsets.GAME_Y, wire_col, Offsets.GAME_Y + HEIGHT_GAME*BLOCK_SIZE);
     }
   }
 
-  private void renderGameFieldBorder(GameContainer gc, Graphics g){
+  private void renderGameFieldBorder(GameContainer gc, Graphics g)
+  {
     g.setColor( GAME_BORDER );
     g.drawRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
   }
 
-  private void renderNextTetroField(GameContainer gc, Graphics g){
+  private void renderNextTetroField(GameContainer gc, Graphics g)
+  {
     g.setColor( NEXT_TETRO_BACKGROUND );
     g.fillRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
     renderNextTetroWires(gc, g);
@@ -387,45 +397,51 @@ public class Board
     g.drawRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
   }
 
-  private void renderNextTetroWires(GameContainer gc, Graphics g){
-    float temp;
+  private void renderNextTetroWires(GameContainer gc, Graphics g)
+  {    
     g.setColor( WIRE_COLOR );
-    for(int row = 1; row < NEXT_TETRO_PIXELS; row++){
-      temp = Offsets.NEXT_TETRO_Y + row*BLOCK_SIZE;
-      g.drawLine( Offsets.NEXT_TETRO_X, temp, Offsets.NEXT_TETRO_X + NEXT_TETRO_SIZE, temp);
+    for(int row = 1; row < NEXT_TETRO_PIXELS; row++)
+    {
+      float wire_row = Offsets.NEXT_TETRO_Y + row*BLOCK_SIZE;
+      g.drawLine( Offsets.NEXT_TETRO_X, wire_row, Offsets.NEXT_TETRO_X + NEXT_TETRO_SIZE, wire_row);
     }
-    for(int col = 1; col < NEXT_TETRO_PIXELS; col++){
-      temp = Offsets.NEXT_TETRO_X + col*BLOCK_SIZE;
-      g.drawLine( temp, Offsets.NEXT_TETRO_Y, temp, Offsets.NEXT_TETRO_Y + NEXT_TETRO_SIZE);
+    for(int col = 1; col < NEXT_TETRO_PIXELS; col++)
+    {
+      float wire_col = Offsets.NEXT_TETRO_X + col*BLOCK_SIZE;
+      g.drawLine( wire_col, Offsets.NEXT_TETRO_Y, wire_col, Offsets.NEXT_TETRO_Y + NEXT_TETRO_SIZE);
     }
   }
 
-  private void renderTetromino(GameContainer gc, Graphics g){
+  private void renderTetromino(GameContainer gc, Graphics g)
+  {
     nextTetro.render(gc, g);
 
     for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
       for(int col = 0; col < WIDTH; col++){
-        Block temp = grid[row][col];
-        if(temp != null){
-          temp.render(gc, g);
+        Block blockToRender = grid[row][col];
+        if(blockToRender != null){
+          blockToRender.render(gc, g);
         }
       }
     }
 
   }
 
-  private void renderGameOver(GameContainer gc, Graphics g){
+  private void renderGameOver(GameContainer gc, Graphics g)
+  {
     g.setColor( Color.white);
     g.drawString("GAME OVER !", Offsets.GAMEOVER_X, Offsets.GAMEOVER_Y);
   }
 
-  private void renderMouse(GameContainer gc, Graphics g){
+  private void renderMouse(GameContainer gc, Graphics g)
+  {
     Input input = gc.getInput();
     g.setColor( Color.white );
     g.drawString("Mouse: " + input.getMouseX() + ", " + input.getMouseY(), Offsets.MOUSE_X, Offsets.MOUSE_Y);
   }
 
-  private void renderLockDelay(GameContainer gc, Graphics g){
+  private void renderLockDelay(GameContainer gc, Graphics g)
+  {
     g.setColor( Color.white );
     g.drawString("Lock Delay: " + lockDelay, Offsets.MOUSE_X, Offsets.MOUSE_Y + Offsets.NEWLINE);
   }
@@ -433,14 +449,17 @@ public class Board
   /**
    * Move the Tetromino to the down.
    */
-  public void moveDown(){
-    if(! canMoveDown()){
+  public void moveDown()
+  {
+    if(! canMoveDown())
+    {
       return;
     }
     moveDownWithoutCheck();
   }
 
-  private void moveDownWithoutCheck(){
+  private void moveDownWithoutCheck()
+  {
     moveDownWithoutCheck(currentTetro);
   }
 
@@ -470,7 +489,7 @@ public class Board
       moveDownWithoutCheck();
     }
     lockCounter = 0;
-    thud();
+    tetroReachesFloor();
   }
 
   private void hardDropGhost()
