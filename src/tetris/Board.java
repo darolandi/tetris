@@ -139,7 +139,7 @@ public class Board
   {
     currentTetro = nextTetro;
     moveNewTetromino();
-    summonGhostTetromino();
+    summonGhostTetromino(Tetromino.DEFAULT_INIT_STATE);
     selectNextTetro();
   }
 
@@ -163,13 +163,16 @@ public class Board
 
   /**
    * Creates a Ghost Tetromino under the current Tetromino.
+   * 
+   * @param Staring orientation state.
    */
-  public void summonGhostTetromino()
+  public void summonGhostTetromino(int state)
   {
     ghostTetro = new Tetromino( currentTetro.getType(),
             currentTetro.getX(),
             currentTetro.getY(),
-            true);
+            true,
+            state);
     hardDropGhost();
   }
 
