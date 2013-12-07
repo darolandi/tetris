@@ -445,23 +445,19 @@ public class Board
   }
 
   private void moveDownWithoutCheck(Tetromino tetromino){
-    Block tempBlock = tetromino.getBlock(0);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = tetromino.getBlock(1);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = tetromino.getBlock(2);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = tetromino.getBlock(3);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-
-    tempBlock = tetromino.getBlock(0);
-    grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;
-    tempBlock = tetromino.getBlock(1);
-    grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;
-    tempBlock = tetromino.getBlock(2);
-    grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;
-    tempBlock = tetromino.getBlock(3);
-    grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;
+    
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = tetromino.getBlock( blockIndex );
+      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    }
+    
+    // NOTE: This separation of loops is intentional, to prevent overwriting.
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = tetromino.getBlock( blockIndex );
+      grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;
+    }
 
     tetromino.moveDown();
   }
@@ -477,17 +473,21 @@ public class Board
     thud();
   }
 
-  private void hardDropGhost(){
-    while(canMoveDown(ghostTetro)){
+  private void hardDropGhost()
+  {
+    while(canMoveDown(ghostTetro))
+    {
       moveDownWithoutCheck(ghostTetro);
     }
   }
 
-  private void moveTetroOverGhost(){
+  private void moveTetroOverGhost()
+  {
     currentTetro.syncGrid(grid);
   }
 
-  private boolean canMoveDown(){
+  private boolean canMoveDown()
+  {
     return canMoveDown(currentTetro);
   }
 
@@ -496,46 +496,20 @@ public class Board
       return false;
     }
 
-    // loop unrolling for performance
-    Block tempBlock = tetromino.getBlock(0);
-    int targetRow = (int)tempBlock.getGridY() +1;
-    if(targetRow >= HEIGHT){
-      return false;
-    }
-    Block targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = tetromino.getBlock(1);
-    targetRow = (int)tempBlock.getGridY() +1;
-    if(targetRow >= HEIGHT){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = tetromino.getBlock(2);
-    targetRow = (int)tempBlock.getGridY() +1;
-    if(targetRow >= HEIGHT){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = tetromino.getBlock(3);
-    targetRow = (int)tempBlock.getGridY() +1;
-    if(targetRow >= HEIGHT){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = tetromino.getBlock(blockIndex);
+      int targetRow = (int)tempBlock.getGridY() +1;
+      if(targetRow >= HEIGHT)
+      {
+        return false;
+      }
+      Block targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
+      if( unpathableBlock(targetBlock) )
+      {
+        return false;
+      }
+    }    
 
     return true;
   }
@@ -547,7 +521,8 @@ public class Board
    * @param movingTetro Non-ghost Tetromino trying to move.
    * @return True if that Block cannot be overwritten.
    */
-  public boolean unpathableBlock(Block targetBlock){
+  public boolean unpathableBlock(Block targetBlock)
+  {
     return unpathableBlock(targetBlock, currentTetro);
   }
 
@@ -558,35 +533,33 @@ public class Board
    * @param movingTetro Non-ghost Tetromino trying to move.
    * @return True if that Block cannot be overwritten.
    */
-  public boolean unpathableBlock(Block targetBlock, Tetromino movingTetro){
+  public boolean unpathableBlock(Block targetBlock, Tetromino movingTetro)
+  {
     return targetBlock != null && !(targetBlock instanceof GhostBlock) && !movingTetro.hasBlock(targetBlock);
   }
 
   /**
    * Move the Tetromino to the left.
    */
-  public void moveLeft(){
-    if(! canMoveLeft()){
+  public void moveLeft()
+  {
+    if(! canMoveLeft())
+    {
       return;
     }
 
-    Block tempBlock = currentTetro.getBlock(0);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = currentTetro.getBlock(1);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = currentTetro.getBlock(2);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = currentTetro.getBlock(3);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-
-    tempBlock = currentTetro.getBlock(0);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
-    tempBlock = currentTetro.getBlock(1);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
-    tempBlock = currentTetro.getBlock(2);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
-    tempBlock = currentTetro.getBlock(3);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = currentTetro.getBlock( blockIndex );
+      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    }
+    
+    // NOTE: This separation of loops is intentional, to prevent overwriting.
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = currentTetro.getBlock( blockIndex );
+      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+    }
 
     currentTetro.moveLeft();
     killGhostTetro();
@@ -598,51 +571,27 @@ public class Board
    * Returns true if current Tetromino can move left by 1 step.
    * @return True if current Tetromino can move left by 1 step.
    */
-  public boolean canMoveLeft(){
-    if(currentTetro == null){
+  public boolean canMoveLeft()
+  {
+    if(currentTetro == null)
+    {
       return false;
     }
 
-    // loop unrolling for performance
-    Block tempBlock = currentTetro.getBlock(0);
-    int targetCol = (int)tempBlock.getGridX() -1;
-    if(targetCol < 0){
-      return false;
-    }
-    Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = currentTetro.getBlock(1);
-    targetCol = (int)tempBlock.getGridX() -1;
-    if(targetCol < 0){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = currentTetro.getBlock(2);
-    targetCol = (int)tempBlock.getGridX() -1;
-    if(targetCol < 0){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = currentTetro.getBlock(3);
-    targetCol = (int)tempBlock.getGridX() -1;
-    if(targetCol < 0){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = currentTetro.getBlock(blockIndex);
+      int targetCol = (int)tempBlock.getGridX() -1;
+      if(targetCol < 0)
+      {
+        return false;
+      }
+      Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
+      if( unpathableBlock(targetBlock) )
+      {
+        return false;
+      }
+    }    
 
     return true;
   }
@@ -663,6 +612,7 @@ public class Board
       grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
     }
     
+    // NOTE: This separation of loops is intentional, to prevent overwriting.
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
       Block tempBlock = currentTetro.getBlock( blockIndex );
@@ -699,7 +649,7 @@ public class Board
       {
         return false;
       }
-    }    
+    }
 
     return true;
   }
