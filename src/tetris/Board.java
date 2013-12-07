@@ -75,14 +75,14 @@ public class Board
    * Inits the Board (includes game field and Next-Tetromino).
    * Also inits the control and its listener.
    *
-   * @param gc Game Container.
+   * @param gameContainer Game Container.
    */
-  public Board(GameContainer gc)
+  public Board(GameContainer gameContainer)
   {    
     bgm.loop();
     musicVolume = DEFAULT_MUSIC_VOLUME;
     bgm.setVolume( DEFAULT_MUSIC_VOLUME );
-    setupControl(gc);
+    setupControl(gameContainer);
     newGame();
     defeat();
   }
@@ -95,9 +95,9 @@ public class Board
     defeat();
   }
 
-  private void setupControl(GameContainer gc)
+  private void setupControl(GameContainer gameContainer)
   {
-    Input input = gc.getInput();
+    Input input = gameContainer.getInput();
     input.enableKeyRepeat();
     InputProvider provider = new InputProvider( input );
     provider.addListener( new Control(this) );
@@ -299,10 +299,11 @@ public class Board
 
   private void dropDownRowsAt(int startRow)
   {
-    // would be much more efficient if we could
-    // store the max height of the Tetris tower
-    // and only loop that much    
-
+    /*
+    would be much more efficient if we could
+    store the max height of the Tetris tower
+    and only loop that much    
+    */
     for(int row = startRow; row >= 1; row--)
     {
       for(int col = 0; col < WIDTH; col++)
@@ -321,25 +322,25 @@ public class Board
   /**
    * Advances the clock.
    *
-   * @param gc Game Container.
-   * @param dt Time interval.
+   * @param gameContainer Game Container.
+   * @param deltaTime Time interval.
    */
-  public void update(GameContainer gc, int dt)
+  public void update(GameContainer gameContainer, int deltaTime)
   {
-    updateTicker(gc, dt);
+    updateTicker(gameContainer, deltaTime);
   }
 
-  private void updateTicker(GameContainer gc, int dt)
+  private void updateTicker(GameContainer gameContainer, int deltaTime)
   {
-    lockCounter += dt;
+    lockCounter += deltaTime;
     if(lockCounter >= lockDelay)
     {
       lockCounter = 0;
-      tick(gc);
+      tick(gameContainer);
     }    
   }
     
-  private void tick(GameContainer gc)
+  private void tick(GameContainer gameContainer)
   {
     if(debugMode)
     {
@@ -365,83 +366,83 @@ public class Board
     
   /**
    * Renders the Tetrominos and the game field.
-   * @param gc Game Container.
-   * @param g Graphics context.
+   * @param gameContainer Game Container.
+   * @param graphics Graphics context.
    */
-  public void render(GameContainer gc, Graphics g)
+  public void render(GameContainer gameContainer, Graphics graphics)
   {
-    renderGameField(gc, g);
-    renderNextTetroField(gc, g);
-    renderTetromino(gc, g);
-    renderGameFieldBorder(gc, g);
-    scoreKeeper.render(gc, g);
+    renderGameField(gameContainer, graphics);
+    renderNextTetroField(gameContainer, graphics);
+    renderTetromino(gameContainer, graphics);
+    renderGameFieldBorder(gameContainer, graphics);
+    scoreKeeper.render(gameContainer, graphics);
 
     if(isDefeat)
     {
-      renderGameOver(gc, g);
+      renderGameOver(gameContainer, graphics);
     }
     if(debugMode)
     {
-      renderMouse(gc, g);
-      renderLockDelay(gc, g);
+      renderMouse(gameContainer, graphics);
+      renderLockDelay(gameContainer, graphics);
     }
   }
 
-  private void renderGameField(GameContainer gc, Graphics g)
+  private void renderGameField(GameContainer gameContainer, Graphics graphics)
   {
-    g.setColor( GAME_BACKGROUND );
-    g.fillRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
-    renderGameWires(gc, g);
+    graphics.setColor( GAME_BACKGROUND );
+    graphics.fillRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
+    renderGameWires(gameContainer, graphics);
   }
 
-  private void renderGameWires(GameContainer gc, Graphics g)
+  private void renderGameWires(GameContainer gameContainer, Graphics graphics)
   {    
-    g.setColor( WIRE_COLOR );
+    graphics.setColor( WIRE_COLOR );
     for(int row = 1; row < HEIGHT_GAME; row++)
     {
       float wire_row = Offsets.GAME_Y + row*BLOCK_SIZE;
-      g.drawLine( Offsets.GAME_X, wire_row, Offsets.GAME_X + WIDTH*BLOCK_SIZE, wire_row);
+      graphics.drawLine( Offsets.GAME_X, wire_row, Offsets.GAME_X + WIDTH*BLOCK_SIZE, wire_row);
     }
     for(int col = 1; col < WIDTH; col++)
     {
       float wire_col = Offsets.GAME_X + col*BLOCK_SIZE;
-      g.drawLine( wire_col, Offsets.GAME_Y, wire_col, Offsets.GAME_Y + HEIGHT_GAME*BLOCK_SIZE);
+      graphics.drawLine( wire_col, Offsets.GAME_Y, wire_col, Offsets.GAME_Y + HEIGHT_GAME*BLOCK_SIZE);
     }
   }
 
-  private void renderGameFieldBorder(GameContainer gc, Graphics g)
+  private void renderGameFieldBorder(GameContainer gameContainer, Graphics graphics)
   {
-    g.setColor( GAME_BORDER );
-    g.drawRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
+    graphics.setColor( GAME_BORDER );
+    graphics.drawRect( Offsets.GAME_X, Offsets.GAME_Y, WIDTH * BLOCK_SIZE, HEIGHT_GAME * BLOCK_SIZE );
   }
 
-  private void renderNextTetroField(GameContainer gc, Graphics g)
+  private void renderNextTetroField(GameContainer gameContainer, Graphics graphics)
   {
-    g.setColor( NEXT_TETRO_BACKGROUND );
-    g.fillRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
-    renderNextTetroWires(gc, g);
-    g.setColor( NEXT_TETRO_BORDER );
-    g.drawRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
+    graphics.setColor( NEXT_TETRO_BACKGROUND );
+    graphics.fillRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
+    renderNextTetroWires(gameContainer, graphics);
+    graphics.setColor( NEXT_TETRO_BORDER );
+    graphics.drawRect( Offsets.NEXT_TETRO_X, Offsets.GAME_Y, NEXT_TETRO_SIZE, NEXT_TETRO_SIZE );
   }
 
-  private void renderNextTetroWires(GameContainer gc, Graphics g)
+  private void renderNextTetroWires(GameContainer gameContainer, Graphics graphics)
   {    
-    g.setColor( WIRE_COLOR );
+    graphics.setColor( WIRE_COLOR );
     for(int row = 1; row < NEXT_TETRO_PIXELS; row++)
     {
       float wire_row = Offsets.NEXT_TETRO_Y + row*BLOCK_SIZE;
-      g.drawLine( Offsets.NEXT_TETRO_X, wire_row, Offsets.NEXT_TETRO_X + NEXT_TETRO_SIZE, wire_row);
+      graphics.drawLine( Offsets.NEXT_TETRO_X, wire_row, Offsets.NEXT_TETRO_X + NEXT_TETRO_SIZE, wire_row);
     }
     for(int col = 1; col < NEXT_TETRO_PIXELS; col++)
     {
       float wire_col = Offsets.NEXT_TETRO_X + col*BLOCK_SIZE;
-      g.drawLine( wire_col, Offsets.NEXT_TETRO_Y, wire_col, Offsets.NEXT_TETRO_Y + NEXT_TETRO_SIZE);
+      graphics.drawLine( wire_col, Offsets.NEXT_TETRO_Y, wire_col, Offsets.NEXT_TETRO_Y + NEXT_TETRO_SIZE);
     }
   }
 
-  private void renderTetromino(GameContainer gc, Graphics g)
+  private void renderTetromino(GameContainer gameContainer, Graphics graphics)
   {
-    nextTetro.render(gc, g);
+    nextTetro.render(gameContainer, graphics);
 
     for(int row = HEIGHT_WAITING; row < HEIGHT; row++)
     {
@@ -450,30 +451,30 @@ public class Board
         Block blockToRender = grid[row][col];
         if(blockToRender != null)
         {
-          blockToRender.render(gc, g);
+          blockToRender.render(gameContainer, graphics);
         }
       }
     }
 
   }
 
-  private void renderGameOver(GameContainer gc, Graphics g)
+  private void renderGameOver(GameContainer gameContainer, Graphics graphics)
   {
-    g.setColor( Color.white);
-    g.drawString("GAME OVER !", Offsets.GAMEOVER_X, Offsets.GAMEOVER_Y);
+    graphics.setColor( Color.white);
+    graphics.drawString("GAME OVER !", Offsets.GAMEOVER_X, Offsets.GAMEOVER_Y);
   }
 
-  private void renderMouse(GameContainer gc, Graphics g)
+  private void renderMouse(GameContainer gameContainer, Graphics graphics)
   {
-    Input input = gc.getInput();
-    g.setColor( Color.white );
-    g.drawString("Mouse: " + input.getMouseX() + ", " + input.getMouseY(), Offsets.MOUSE_X, Offsets.MOUSE_Y);
+    Input input = gameContainer.getInput();
+    graphics.setColor( Color.white );
+    graphics.drawString("Mouse: " + input.getMouseX() + ", " + input.getMouseY(), Offsets.MOUSE_X, Offsets.MOUSE_Y);
   }
 
-  private void renderLockDelay(GameContainer gc, Graphics g)
+  private void renderLockDelay(GameContainer gameContainer, Graphics graphics)
   {
-    g.setColor( Color.white );
-    g.drawString("Lock Delay: " + lockDelay, Offsets.MOUSE_X, Offsets.MOUSE_Y + Offsets.NEWLINE);
+    graphics.setColor( Color.white );
+    graphics.drawString("Lock Delay: " + lockDelay, Offsets.MOUSE_X, Offsets.MOUSE_Y + Offsets.NEWLINE);
   }
 
   /**
@@ -498,15 +499,15 @@ public class Board
     
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = tetromino.getBlock( blockIndex );
-      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+      Block oldBlock = tetromino.getBlock( blockIndex );
+      grid[ (int)oldBlock.getGridY() ][ (int)oldBlock.getGridX() ] = null;
     }
     
     // NOTE: This separation of loops is intentional, to prevent overwriting.
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = tetromino.getBlock( blockIndex );
-      grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ] = tempBlock;
+      Block moveBlock = tetromino.getBlock( blockIndex );
+      grid[ (int)moveBlock.getGridY() +1 ][ (int)moveBlock.getGridX() ] = moveBlock;
     }
 
     tetromino.moveDown();
@@ -552,13 +553,13 @@ public class Board
 
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = tetromino.getBlock(blockIndex);
-      int targetRow = (int)tempBlock.getGridY() +1;
+      Block moveBlock = tetromino.getBlock(blockIndex);
+      int targetRow = (int)moveBlock.getGridY() +1;
       if(targetRow >= HEIGHT)
       {
         return false;
       }
-      Block targetBlock = grid[ (int)tempBlock.getGridY() +1 ][ (int)tempBlock.getGridX() ];
+      Block targetBlock = grid[ (int)moveBlock.getGridY() +1 ][ (int)moveBlock.getGridX() ];
       if( unpathableBlock(targetBlock) )
       {
         return false;
@@ -604,15 +605,15 @@ public class Board
 
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = currentTetro.getBlock( blockIndex );
-      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+      Block oldBlock = currentTetro.getBlock( blockIndex );
+      grid[ (int)oldBlock.getGridY() ][ (int)oldBlock.getGridX() ] = null;
     }
     
     // NOTE: This separation of loops is intentional, to prevent overwriting.
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = currentTetro.getBlock( blockIndex );
-      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ] = tempBlock;
+      Block moveBlock = currentTetro.getBlock( blockIndex );
+      grid[ (int)moveBlock.getGridY() ][ (int)moveBlock.getGridX() -1 ] = moveBlock;
     }
 
     currentTetro.moveLeft();
@@ -634,13 +635,13 @@ public class Board
 
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = currentTetro.getBlock(blockIndex);
-      int targetCol = (int)tempBlock.getGridX() -1;
+      Block moveBlock = currentTetro.getBlock(blockIndex);
+      int targetCol = (int)moveBlock.getGridX() -1;
       if(targetCol < 0)
       {
         return false;
       }
-      Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() -1 ];
+      Block targetBlock = grid[ (int)moveBlock.getGridY() ][ (int)moveBlock.getGridX() -1 ];
       if( unpathableBlock(targetBlock) )
       {
         return false;
@@ -662,15 +663,15 @@ public class Board
 
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = currentTetro.getBlock( blockIndex );
-      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+      Block oldBlock = currentTetro.getBlock( blockIndex );
+      grid[ (int)oldBlock.getGridY() ][ (int)oldBlock.getGridX() ] = null;
     }
     
     // NOTE: This separation of loops is intentional, to prevent overwriting.
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = currentTetro.getBlock( blockIndex );
-      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
+      Block moveBlock = currentTetro.getBlock( blockIndex );
+      grid[ (int)moveBlock.getGridY() ][ (int)moveBlock.getGridX() +1 ] = moveBlock;
     }
       
     currentTetro.moveRight();
@@ -692,13 +693,13 @@ public class Board
         
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
-      Block tempBlock = currentTetro.getBlock(blockIndex);
-      int targetCol = (int)tempBlock.getGridX() +1;
+      Block moveBlock = currentTetro.getBlock(blockIndex);
+      int targetCol = (int)moveBlock.getGridX() +1;
       if(targetCol >= WIDTH)
       {
         return false;
       }
-      Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
+      Block targetBlock = grid[ (int)moveBlock.getGridY() ][ (int)moveBlock.getGridX() +1 ];
       if( unpathableBlock(targetBlock) )
       {
         return false;

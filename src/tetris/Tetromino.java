@@ -45,7 +45,7 @@ public class Tetromino {
   }
   
   private void createBlocks(){
-    blocks = new Block[4];
+    blocks = new Block[TetrominoInfo.BLOCK_COUNT];
     blocks[0] = new Block(type, refX, refY);
     blocks[1] = new Block(type, refX, refY);
     blocks[2] = new Block(type, refX, refY);

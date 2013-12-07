@@ -16,6 +16,7 @@ import java.io.File;
  */
 public class Tetris extends BasicGame
 {
+  // undefined behavior if set to be smaller than gamefield size
   private static final int WINDOW_WIDTH = 700;
   private static final int WINDOW_HEIGHT = 480;
   private static final boolean FULLSCREEN = false;
@@ -48,13 +49,13 @@ public class Tetris extends BasicGame
    * Updates the board and the ticker (responsible for locking).
    * 
    * @param gameContainer Game Container.
-   * @param deltaT Time interval.
+   * @param deltaTime Time interval.
    * @throws SlickException 
    */
   @Override
-  public void update(GameContainer gameContainer, int deltaT) throws SlickException
+  public void update(GameContainer gameContainer, int deltaTime) throws SlickException
   {    
-    board.update(gameContainer, deltaT);    
+    board.update(gameContainer, deltaTime);    
   }  
   
   /**
@@ -108,11 +109,11 @@ public class Tetris extends BasicGame
       appgameContainer.setDisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT, FULLSCREEN);
       appgameContainer.start();
     }
-    catch(SlickException e)
+    catch(SlickException slickException)
     {
-      e.printStackTrace();
+      slickException.printStackTrace();
     }
-    catch(UnsatisfiedLinkError err)
+    catch(UnsatisfiedLinkError unsatisfiedLink)
     {
       // ignore exception, we're expecting
     }
