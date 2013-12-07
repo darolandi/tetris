@@ -12,19 +12,22 @@ import org.newdawn.slick.Color;
 public class ScoreKeeper {  
     
   private static final Color TEXT_COLOR = new Color(255, 255, 255);
-  private static final String SCORETEXT_DEFAULT = "Score: ";
   private static final String LEVELTEXT_DEFAULT = "Level: ";
+  private static final String CLEAREDTEXT_DEFAULT = "Cleared: ";
+  private static final String SCORETEXT_DEFAULT = "Score: ";
   
   private static final float BASE_SCORE = 100.0f;
   private static final float[] ROW_MULTIPLIER = {1.0f, 1.5f, 2.0f, 2.5f};
   private static final float LEVEL_BONUS = 0.2f;
-  
-  private float score;
+    
   private int level;
+  private int clearedCount;
+  private float score;
   
   public ScoreKeeper(){
-    score = 0.0f;
     level = 0;
+    clearedCount = 0;
+    score = 0.0f;    
   }
   
   /**
@@ -33,6 +36,7 @@ public class ScoreKeeper {
    * @param rows Count of rows that were cleared.
    */
   public void clearedRows(int rows){
+    clearedCount += rows;
     score += rows * BASE_SCORE * (ROW_MULTIPLIER[rows-1] + LEVEL_BONUS*level);
   }
   
@@ -53,9 +57,11 @@ public class ScoreKeeper {
    */  
   public void render(GameContainer gc, Graphics g){
     g.setColor( TEXT_COLOR );
-    g.drawString( LEVELTEXT_DEFAULT + String.format("%6d", level), Offsets.SCORE_X, Offsets.SCORE_Y);
-    g.drawString( SCORETEXT_DEFAULT + String.format("%6.0f", score),
-            Offsets.SCORE_X, Offsets.SCORE_Y + Offsets.NEWLINE );    
+    g.drawString( LEVELTEXT_DEFAULT + String.format("%7d", level), Offsets.SCORE_X, Offsets.SCORE_Y);
+    g.drawString( CLEAREDTEXT_DEFAULT + String.format("%5d", clearedCount),
+            Offsets.SCORE_X, Offsets.SCORE_Y + Offsets.NEWLINE);
+    g.drawString( SCORETEXT_DEFAULT + String.format("%7.0f", score),
+            Offsets.SCORE_X, Offsets.SCORE_Y + 2*Offsets.NEWLINE );    
   }    
   
 }

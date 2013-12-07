@@ -21,7 +21,7 @@ public class Offsets {
   public static final float NEWLINE = 20;
   
   public static final float GAMEOVER_X = NEXT_TETRO_X;
-  public static final float GAMEOVER_Y = NEXT_TETRO_Y + GAME_X*5;
+  public static final float GAMEOVER_Y = NEXT_TETRO_Y + GAME_X*6;
   
   public static final float MOUSE_X = NEXT_TETRO_X;
   public static final float MOUSE_Y = NEXT_TETRO_Y + GAME_X*9;

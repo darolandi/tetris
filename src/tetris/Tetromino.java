@@ -46,10 +46,10 @@ public class Tetromino {
   
   private void createBlocks(){
     blocks = new Block[TetrominoInfo.BLOCK_COUNT];
-    blocks[0] = new Block(type, refX, refY);
-    blocks[1] = new Block(type, refX, refY);
-    blocks[2] = new Block(type, refX, refY);
-    blocks[3] = new Block(type, refX, refY);
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      blocks[blockIndex] = new Block(type, refX, refY);
+    }    
     // notice that the blocks are not at their proper positions yet
   }
   
