@@ -149,17 +149,12 @@ public class Tetromino
   
   private void syncBlocks()
   {
-    Point[] points = TetrominoInfo.getPoints(type)[state];    
-    
-    // loop unrolling for performance        
-    blocks[0].setPosition(refX + points[0].getX() * Board.BLOCK_SIZE,
-                        refY + points[0].getY() * Board.BLOCK_SIZE);
-    blocks[1].setPosition(refX + points[1].getX() * Board.BLOCK_SIZE,
-                        refY + points[1].getY() * Board.BLOCK_SIZE);
-    blocks[2].setPosition(refX + points[2].getX() * Board.BLOCK_SIZE,
-                        refY + points[2].getY() * Board.BLOCK_SIZE);
-    blocks[3].setPosition(refX + points[3].getX() * Board.BLOCK_SIZE,
-                        refY + points[3].getY() * Board.BLOCK_SIZE);    
+    Point[] points = TetrominoInfo.getPoints(type)[state];        
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      blocks[blockIndex].setPosition(refX + points[blockIndex].getX() * Board.BLOCK_SIZE,
+                        refY + points[blockIndex].getY() * Board.BLOCK_SIZE);
+    }
   }  
   
   /**
@@ -170,32 +165,22 @@ public class Tetromino
    * @param grid Grid of Blocks from the Board.
    */  
   public void syncGrid(Block[][] grid)
-  {
-    Block tempBlock;
-    // loop unrolling for performance
-    tempBlock = blocks[0];
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
-    tempBlock = blocks[1];
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
-    tempBlock = blocks[2];
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
-    tempBlock = blocks[3];
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = tempBlock;
+  {        
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block syncBlock = blocks[blockIndex];
+      grid[ (int)syncBlock.getGridY() ][ (int)syncBlock.getGridX() ] = syncBlock;
+    }
   }
   
   // expected to be called only during rotating
   // or when killing Tetromino
   private void unsyncGrid(Block[][] grid){
-    Block tempBlock;
-    // loop unrolling for performance
-    tempBlock = blocks[0];
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = blocks[1];
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = blocks[2];
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = blocks[3];
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block syncBlock = blocks[blockIndex];
+      grid[ (int)syncBlock.getGridY() ][ (int)syncBlock.getGridX() ] = null;
+    }
   }
   
   /**
@@ -262,52 +247,20 @@ public class Tetromino
   
   private boolean canRotate(Block[][] grid, int futureState, Board board)
   {
-    Point[] points = TetrominoInfo.getPoints(type)[futureState];
-    int gridX;
-    int gridY;
-    Block targetBlock;
+    Point[] points = TetrominoInfo.getPoints(type)[futureState];    
     
-    // loop unrolling for performance
-    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[0].getX() );
-    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[0].getY() + Board.HEIGHT_WAITING );
-    if( outOfBounds(gridX, gridY) ){
-      return false;
-    }
-    targetBlock = grid[gridY][gridX];
-    if( board.unpathableBlock(targetBlock) ){
-      return false;
-    }
-    
-    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[1].getX() );
-    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[1].getY() + Board.HEIGHT_WAITING );
-    if( outOfBounds(gridX, gridY) ){
-      return false;
-    }
-    targetBlock = grid[gridY][gridX];
-    if( board.unpathableBlock(targetBlock) ){
-      return false;
-    }
-    
-    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[2].getX() );
-    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[2].getY() + Board.HEIGHT_WAITING );
-    if( outOfBounds(gridX, gridY) ){
-      return false;
-    }
-    targetBlock = grid[gridY][gridX];
-    if( board.unpathableBlock(targetBlock) ){
-      return false;
-    }
-    
-    gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[3].getX() );
-    gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[3].getY() + Board.HEIGHT_WAITING );
-    if( outOfBounds(gridX, gridY) ){
-      return false;
-    }
-    targetBlock = grid[gridY][gridX];
-    if( board.unpathableBlock(targetBlock) ){
-      return false;
-    }
-    
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      int gridX = (int)( (refX - Offsets.GAME_X)/Board.BLOCK_SIZE + points[blockIndex].getX() );
+      int gridY = (int)( (refY - Offsets.GAME_Y)/Board.BLOCK_SIZE + points[blockIndex].getY() + Board.HEIGHT_WAITING );
+      if( outOfBounds(gridX, gridY) ){
+        return false;
+      }
+      Block targetBlock = grid[gridY][gridX];
+      if( board.unpathableBlock(targetBlock) ){
+        return false;
+      }
+    }        
     return true;
   }
   
@@ -377,10 +330,10 @@ public class Tetromino
   public void kill(Block[][] grid)
   {
     unsyncGrid(grid);
-    blocks[0] = null;
-    blocks[1] = null;
-    blocks[2] = null;
-    blocks[3] = null;
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      blocks[blockIndex] = null;
+    }
     blocks = null;
   }
   
