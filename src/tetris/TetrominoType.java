@@ -5,7 +5,8 @@ package tetris;
  * 
  * @author Daniel Rolandi
  */
-public enum TetrominoType {
+public enum TetrominoType
+{
   I, Z, S, O, T, L, J;    
   
   /**
@@ -14,7 +15,8 @@ public enum TetrominoType {
    * 
    * @return Random Tetromino type.
    */
-  public static TetrominoType getRandom(){
+  public static TetrominoType getRandom()
+  {
     return values()[ (int)(Math.random() * values().length) ];
   }    
   

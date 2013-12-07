@@ -44,7 +44,7 @@ public class Board
     {
       bgm = new Music("music/Tetris.ogg");      
     }
-    catch(SlickException e)
+    catch(SlickException slickException)
     {
       throw new IllegalStateException("Could not load music.");
     }

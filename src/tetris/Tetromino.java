@@ -16,7 +16,8 @@ import org.newdawn.slick.geom.Point;
  * 
  * @author Daniel Rolandi
  */
-public class Tetromino {
+public class Tetromino
+{
   public static final int DEFAULT_INIT_STATE = 0;
   
   private TetrominoType type;
@@ -26,25 +27,30 @@ public class Tetromino {
   private int state;
   private boolean ghost;
   
-  public Tetromino(TetrominoType type, float x, float y, boolean ghost){
+  public Tetromino(TetrominoType type, float x, float y, boolean ghost)
+  {
     this(type, x, y, ghost, DEFAULT_INIT_STATE);
   }
   
-  public Tetromino(TetrominoType type, float x, float y, boolean ghost, int state){
+  public Tetromino(TetrominoType type, float x, float y, boolean ghost, int state)
+  {
     this.type = type;
     refX = x;
     refY = y;    
     this.state = state;
     this.ghost = ghost;
-    if(ghost){
+    if(ghost)
+    {
       createGhostBlocks();
-    }else{
+    }
+    else{
       createBlocks();
     }    
     syncBlocks();
   }
   
-  private void createBlocks(){
+  private void createBlocks()
+  {
     blocks = new Block[TetrominoInfo.BLOCK_COUNT];
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
@@ -53,12 +59,13 @@ public class Tetromino {
     // notice that the blocks are not at their proper positions yet
   }
   
-  private void createGhostBlocks(){
-    blocks = new Block[4];
-    blocks[0] = new GhostBlock(type, refX, refY);
-    blocks[1] = new GhostBlock(type, refX, refY);
-    blocks[2] = new GhostBlock(type, refX, refY);
-    blocks[3] = new GhostBlock(type, refX, refY);
+  private void createGhostBlocks()
+  {
+    blocks = new Block[TetrominoInfo.BLOCK_COUNT];
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      blocks[blockIndex] = new GhostBlock(type, refX, refY);
+    }    
     // notice that the blocks are not at their proper positions yet
   }
   
@@ -67,21 +74,23 @@ public class Tetromino {
    * Tetrominos in game are rendered by Board.
    * This method is to intended to be used for Next-Tetromino.
    * 
-   * @param gc Game Container.
-   * @param g Graphics context.
+   * @param gameContainer Game Container.
+   * @param graphics Graphics context.
    */
-  public void render(GameContainer gc, Graphics g){    
-    blocks[0].render(gc, g);
-    blocks[1].render(gc, g);
-    blocks[2].render(gc, g);
-    blocks[3].render(gc, g);
+  public void render(GameContainer gameContainer, Graphics graphics)
+  {
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      blocks[blockIndex].render(gameContainer, graphics);
+    }    
   }
   
   /**
    * Returns reference X coordinate.
    * @return Reference X coordinate.
    */
-  public float getX(){
+  public float getX()
+  {
     return refX;
   }
   
@@ -89,7 +98,8 @@ public class Tetromino {
    * Returns reference Y coordinate.
    * @return Reference Y coordinate.
    */
-  public float getY(){
+  public float getY()
+  {
     return refY;
   }
   
@@ -97,7 +107,8 @@ public class Tetromino {
    * Returns reference to Block by index.
    * @return Reference to Block by index.
    */
-  public Block getBlock(int index){
+  public Block getBlock(int index)
+  {
     return blocks[index];
   }
   
@@ -107,11 +118,15 @@ public class Tetromino {
    * @param block Block in question.
    * @return True if that Block is a part of this Tetromino.
    */
-  public boolean hasBlock(Block block){
+  public boolean hasBlock(Block block)
+  {
     // just test by reference is sufficient
-    if(block == blocks[0] || block == blocks[1]
-            || block == blocks[2] || block == blocks[3]){
-      return true;
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      if(block == blocks[blockIndex])
+      {
+        return true;
+      }
     }
     return false;
   }
@@ -119,7 +134,8 @@ public class Tetromino {
   /**
    * Moves this Tetromino to the SpawnPoint in Waiting Room (above Game).
    */
-  public void moveToSpawn(Block[][] grid){
+  public void moveToSpawn(Block[][] grid)
+  {
     Point spawnPoint = TetrominoInfo.getSpawnPoint(type);
     float spawnX = spawnPoint.getX();
     float spawnY = spawnPoint.getY();
@@ -131,7 +147,8 @@ public class Tetromino {
     syncGrid(grid);
   }
   
-  private void syncBlocks(){
+  private void syncBlocks()
+  {
     Point[] points = TetrominoInfo.getPoints(type)[state];    
     
     // loop unrolling for performance        
@@ -152,7 +169,8 @@ public class Tetromino {
    * 
    * @param grid Grid of Blocks from the Board.
    */  
-  public void syncGrid(Block[][] grid){
+  public void syncGrid(Block[][] grid)
+  {
     Block tempBlock;
     // loop unrolling for performance
     tempBlock = blocks[0];
@@ -184,7 +202,8 @@ public class Tetromino {
    * Move the Tetromino to the down.
    * Precondition: Board already checked for empty spaces.
    */
-  public void moveDown(){
+  public void moveDown()
+  {
     refY += Board.BLOCK_SIZE;
     syncBlocks();
   }
@@ -193,7 +212,8 @@ public class Tetromino {
    * Move the Tetromino to the left.
    * Precondition: Board already checked for empty spaces.
    */
-  public void moveLeft(){
+  public void moveLeft()
+  {
     refX -= Board.BLOCK_SIZE;
     syncBlocks();
   }
@@ -202,7 +222,8 @@ public class Tetromino {
    * Move the Tetromino to the right.
    * Precondition: Board already checked for empty spaces.
    */
-  public void moveRight(){
+  public void moveRight()
+  {
     refX += Board.BLOCK_SIZE;
     syncBlocks();
   }
@@ -213,9 +234,11 @@ public class Tetromino {
    * @param grid Grid of Blocks from the Board.
    * @param board Connection to Board.
    */
-  public void rotateLeft(Block[][] grid, Board board){
+  public void rotateLeft(Block[][] grid, Board board)
+  {
     unsyncGrid(grid);    
-    if( canRotateLeft(grid, board)){      
+    if( canRotateLeft(grid, board))
+    {    
       state = (state + 3)%4;
       board.killGhostTetro();
       board.summonGhostTetromino(state);
@@ -231,12 +254,14 @@ public class Tetromino {
    * @param board Connection to Board.
    * @return True if this Tetromino can rotate counter-clockwise.
    */
-  public boolean canRotateLeft(Block[][] grid, Board board){
+  public boolean canRotateLeft(Block[][] grid, Board board)
+  {
     int futureState = (state + 3)%4;
     return canRotate(grid, futureState, board);
   }
   
-  private boolean canRotate(Block[][] grid, int futureState, Board board){
+  private boolean canRotate(Block[][] grid, int futureState, Board board)
+  {
     Point[] points = TetrominoInfo.getPoints(type)[futureState];
     int gridX;
     int gridY;
@@ -286,7 +311,8 @@ public class Tetromino {
     return true;
   }
   
-  private boolean outOfBounds(int gridX, int gridY){
+  private boolean outOfBounds(int gridX, int gridY)
+  {
     return gridX < 0 || gridX >= Board.WIDTH || gridY < 0 || gridY >= Board.HEIGHT;
   }    
   
@@ -296,9 +322,11 @@ public class Tetromino {
    * @param grid Grid of Blocks from the Board.
    * @param board Connection to Board.
    */
-  public void rotateRight(Block[][] grid, Board board){
+  public void rotateRight(Block[][] grid, Board board)
+  {
     unsyncGrid(grid);
-    if( canRotateRight(grid, board)){
+    if( canRotateRight(grid, board))
+    {
       state = (state + 1)%4;
       board.killGhostTetro();
       board.summonGhostTetromino(state);
@@ -314,7 +342,8 @@ public class Tetromino {
    * @param board Connection to Board.
    * @return True if this Tetromino can rotate clockwise.
    */
-  public boolean canRotateRight(Block[][] grid, Board board){
+  public boolean canRotateRight(Block[][] grid, Board board)
+  {
     int futureState = (state + 1)%4;
     return canRotate(grid, futureState, board);
   }
@@ -324,7 +353,8 @@ public class Tetromino {
    * 
    * @return The orientation state of this Tetromino.
    */
-  public int getState(){
+  public int getState()
+  {
     return state;
   }
   
@@ -333,7 +363,8 @@ public class Tetromino {
    * 
    * @return The type of this Tetromino.
    */
-  public TetrominoType getType(){
+  public TetrominoType getType()
+  {
     return type;
   }
   
@@ -343,7 +374,8 @@ public class Tetromino {
    * 
    * @param grid Grid of Blocks from the Board.
    */
-  public void kill(Block[][] grid){
+  public void kill(Block[][] grid)
+  {
     unsyncGrid(grid);
     blocks[0] = null;
     blocks[1] = null;
@@ -353,7 +385,8 @@ public class Tetromino {
   }
   
   @Override
-  public String toString(){
+  public String toString()
+  {
     StringBuilder result = new StringBuilder("");
     
     result.append("Type: ");

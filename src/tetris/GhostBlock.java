@@ -9,7 +9,8 @@ import org.newdawn.slick.Graphics;
  * 
  * @author Daniel Rolandi
  */
-public class GhostBlock extends Block{
+public class GhostBlock extends Block
+{
   private static final Color GHOST_COLOR = Board.WIRE_COLOR;  
   
   /**
@@ -18,20 +19,22 @@ public class GhostBlock extends Block{
    * @param x X coordinate of topleft oorner.
    * @param y Y coordinate of topleft corner.
    */
-  public GhostBlock(TetrominoType type, float x, float y){
+  public GhostBlock(TetrominoType type, float x, float y)
+  {
     super(type, x, y);
   }
   
   /**
    * Draws the GhostBlock onto the GameContainer.
    * 
-   * @param gc Game Container.
-   * @param g Graphics context.
+   * @param gameContainer Game Container.
+   * @param graphics Graphics context.
    */
   @Override
-  public void render(GameContainer gc, Graphics g){    
-    g.setColor( GHOST_COLOR );
-    g.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);      
+  public void render(GameContainer gameContainer, Graphics graphics)
+  {
+    graphics.setColor( GHOST_COLOR );
+    graphics.fillRect(x, y, Board.BLOCK_SIZE, Board.BLOCK_SIZE);      
   }    
   
 }

@@ -10,7 +10,8 @@ import org.newdawn.slick.SlickException;
  * 
  * @author Daniel Rolandi
  */
-public class TetrominoInfo {    
+public class TetrominoInfo
+{
   
   public static final int BLOCK_COUNT = 4;
   public static final int TYPE_COUNT = TetrominoType.values().length;
@@ -30,17 +31,21 @@ public class TetrominoInfo {
   private static final Image T_IMAGE;
   private static final Image L_IMAGE;
   private static final Image J_IMAGE;
-  static{
-    try{
-      I_IMAGE = new Image("_IMAGEs/I.png");
-      Z_IMAGE = new Image("_IMAGEs/Z.png");
-      S_IMAGE = new Image("_IMAGEs/S.png");
-      O_IMAGE = new Image("_IMAGEs/O.png");
-      T_IMAGE = new Image("_IMAGEs/T.png");
-      L_IMAGE = new Image("_IMAGEs/L.png");
-      J_IMAGE = new Image("_IMAGEs/J.png");      
-    }catch(SlickException e){
-      throw new IllegalStateException("Could not load _IMAGEs.");
+  static
+  {
+    try
+    {
+      I_IMAGE = new Image("images/I.png");
+      Z_IMAGE = new Image("images/Z.png");
+      S_IMAGE = new Image("images/S.png");
+      O_IMAGE = new Image("images/O.png");
+      T_IMAGE = new Image("images/T.png");
+      L_IMAGE = new Image("images/L.png");
+      J_IMAGE = new Image("images/J.png");      
+    }
+    catch(SlickException slickException)
+    {
+      throw new IllegalStateException("Could not load images.");
     }
   }
     
@@ -115,8 +120,10 @@ public class TetrominoInfo {
    * @param type Tetromino Type
    * @return Block Color for that Tetromino type
    */
-  public static Color getColor(TetrominoType type){
-    switch(type){
+  public static Color getColor(TetrominoType type)
+  {
+    switch(type)
+    {
       case I: return I_COLOR;
       case Z: return Z_COLOR;
       case S: return S_COLOR;
@@ -134,8 +141,10 @@ public class TetrominoInfo {
    * @param type Tetromino Type
    * @return Block Image for that Tetromino type
    */
-  public static Image getImage(TetrominoType type){
-    switch(type){
+  public static Image getImage(TetrominoType type)
+  {
+    switch(type)
+    {
       case I: return I_IMAGE;
       case Z: return Z_IMAGE;
       case S: return S_IMAGE;
@@ -153,8 +162,10 @@ public class TetrominoInfo {
    * @param type Tetromino Type
    * @return Spawn point for that Tetromino type
    */
-  public static Point getSpawnPoint(TetrominoType type){
-    switch(type){
+  public static Point getSpawnPoint(TetrominoType type)
+  {
+    switch(type)
+    {
       case I: return allPoints[3][2];
       case Z:
       case S:
@@ -166,8 +177,10 @@ public class TetrominoInfo {
     }
   }    
   
-  public static Point[][] getPoints(TetrominoType type){
-    switch(type){
+  public static Point[][] getPoints(TetrominoType type)
+  {
+    switch(type)
+    {
       case I: return pointsI;
       case Z: return pointsZ;
       case S: return pointsS;

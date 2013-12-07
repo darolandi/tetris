@@ -5,7 +5,8 @@ package tetris;
  * 
  * @author Daniel Rolandi
  */
-public class Offsets {
+public class Offsets
+{
   
   public static final float GAME_X = 40.0f;
   public static final float GAME_Y = 40.0f;
