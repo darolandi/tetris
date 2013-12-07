@@ -13,6 +13,9 @@ public class Offsets {
   public static final float NEXT_TETRO_X = GAME_X*2 + Board.WIDTH*Board.BLOCK_SIZE;
   public static final float NEXT_TETRO_Y = GAME_Y;
   
+  public static final int SPAWN_X = 2;
+  public static final int SPAWN_Y = 1;
+  
   public static final float SCORE_X = NEXT_TETRO_X;
   public static final float SCORE_Y = NEXT_TETRO_Y + Board.NEXT_TETRO_SIZE + GAME_X;
   public static final float NEWLINE = 20;

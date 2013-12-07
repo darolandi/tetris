@@ -34,7 +34,7 @@ public class Board
   private static final int NEXT_TETRO_PIXELS = 6;
   public static final float NEXT_TETRO_SIZE = NEXT_TETRO_PIXELS * BLOCK_SIZE;
   private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
-  private static final Color NEXT_TETRO_BORDER = GAME_BORDER;
+  private static final Color NEXT_TETRO_BORDER = GAME_BORDER;  
   
   private static final Music bgm;
   private static final int DEFAULT_MUSIC_VOLUME = 0; // should be 0 or 1
@@ -128,7 +128,7 @@ public class Board
     lockCounter = 0;    
     currentTetro = null;
     ghostTetro = null;
-    nextTypes = new ArrayDeque<>(8);
+    nextTypes = new ArrayDeque<>(TetrominoInfo.TYPE_COUNT);
     scoreKeeper = new ScoreKeeper();
     clearCounter = 0;
     isDefeat = false;
@@ -184,8 +184,8 @@ public class Board
     float spawnY = spawnPoint.getY();
 
     nextTetro = new Tetromino( type,
-            Offsets.NEXT_TETRO_X + (spawnX-2)*BLOCK_SIZE,
-            Offsets.NEXT_TETRO_Y + (spawnY-1)*BLOCK_SIZE,
+            Offsets.NEXT_TETRO_X + (spawnX-Offsets.SPAWN_X)*BLOCK_SIZE,
+            Offsets.NEXT_TETRO_Y + (spawnY-Offsets.SPAWN_Y)*BLOCK_SIZE,
             false);
   }
 
