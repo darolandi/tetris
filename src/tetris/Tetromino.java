@@ -17,6 +17,8 @@ import org.newdawn.slick.geom.Point;
  * @author Daniel Rolandi
  */
 public class Tetromino {
+  private static final int DEFAULT_INIT_STATE = 0;
+  
   private TetrominoType type;
   private Block[] blocks;
   private float refX;
@@ -25,7 +27,7 @@ public class Tetromino {
   private boolean ghost;
   
   public Tetromino(TetrominoType type, float x, float y, boolean ghost){
-    this(type, x, y, ghost, 0);
+    this(type, x, y, ghost, DEFAULT_INIT_STATE);
   }
   
   public Tetromino(TetrominoType type, float x, float y, boolean ghost, int state){

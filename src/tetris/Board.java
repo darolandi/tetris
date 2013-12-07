@@ -139,7 +139,7 @@ public class Board
   {
     currentTetro = nextTetro;
     moveNewTetromino();
-    summonGhostTetromino(0);
+    summonGhostTetromino();
     selectNextTetro();
   }
 
@@ -148,7 +148,8 @@ public class Board
    */
   public void killGhostTetro()
   {
-    if(ghostTetro != null){
+    if(ghostTetro != null)
+    {
       ghostTetro.kill(grid);
       ghostTetro = null;
     }
@@ -162,20 +163,18 @@ public class Board
 
   /**
    * Creates a Ghost Tetromino under the current Tetromino.
-   *
-   * @param state Orientation state of Tetromino.
    */
-  public void summonGhostTetromino(int state)
+  public void summonGhostTetromino()
   {
     ghostTetro = new Tetromino( currentTetro.getType(),
             currentTetro.getX(),
             currentTetro.getY(),
-            true,
-            state);
+            true);
     hardDropGhost();
   }
 
-  private void selectNextTetro(){
+  private void selectNextTetro()
+  {
     TetrominoType type = getNextTetroType();
     Point spawnPoint = TetrominoInfo.getSpawnPoint( type );
     float spawnX = spawnPoint.getX();
@@ -220,13 +219,12 @@ public class Board
   }
 
   private void checkDefeat()
-  {
-    Block tempBlock;
+  {    
     // defeat happens if any non-ghost Block crosses into the Waiting Room
     for(int col = 0; col < WIDTH; col++)
     {
-      tempBlock = grid[HEIGHT_WAITING - 1][col];
-      if(tempBlock != null && !(tempBlock instanceof GhostBlock) )
+      Block testBlock = grid[HEIGHT_WAITING - 1][col];
+      if(testBlock != null && !(testBlock instanceof GhostBlock) )
       {
         defeat();
         break;
@@ -234,63 +232,83 @@ public class Board
     }
   }
 
-  private void defeat(){
+  private void defeat()
+  {
     isDefeat = true;
-    currentTetro = null; // remove control from Player
+    disableTetroControl();
+  }
+  
+  private void disableTetroControl()
+  {
+    currentTetro = null;
   }
 
-  private void attemptClearRows(){
+  private void attemptClearRows()
+  {
     boolean didClearRow;
-    ArrayDeque<Integer> clearedRows = new ArrayDeque<>(5);
+    ArrayDeque<Integer> clearedRows = new ArrayDeque<>(TetrominoInfo.BLOCK_COUNT);
+    
     int row = HEIGHT-1;
-
-    while(row >= HEIGHT_WAITING){
+    while(row >= HEIGHT_WAITING)
+    {
 
       didClearRow = true;
-      for(int col = 0; col < WIDTH; col++){
-        if(grid[row][col] == null){
+      for(int col = 0; col < WIDTH; col++)
+      {
+        if(grid[row][col] == null)
+        {
           didClearRow = false;
           break;
         }
       }
-      if(didClearRow){
+      if(didClearRow)
+      {
         clearedRows.addFirst(row);
       }
       row--;
     }
 
-    if(clearedRows.size() > 0){
-      clearRows( clearedRows );
-      scoreKeeper.clearedRows( clearedRows.size() );
-      clearCounter += clearedRows.size();
-      if(clearCounter >= CLEARS_PER_LEVEL){
-        int levelIncrease = clearCounter/CLEARS_PER_LEVEL;
-        scoreKeeper.levelUp( levelIncrease );
-        lockDelay = Math.max(MIN_LOCK_DELAY, lockDelay - LOCK_DELAY_DECREMENT_PER_LEVEL * levelIncrease);
-        clearCounter %= CLEARS_PER_LEVEL;
-      }
+    if(clearedRows.size() > 0)
+    {
+      clearRows( clearedRows );      
     }
   }
 
-  private void clearRows(ArrayDeque<Integer> clearedRows){
+  private void clearRows(ArrayDeque<Integer> clearedRows)
+  {
     // Blocks far above can get removed several times
     // but the optimal algorithm is not worth the time right now
-    for(Integer row : clearedRows){
+    for(Integer row : clearedRows)
+    {
       dropDownRowsAt(row);
+    }
+    
+    scoreKeeper.clearedRows( clearedRows.size() );
+    clearCounter += clearedRows.size();
+    if(clearCounter >= CLEARS_PER_LEVEL)
+    {
+      int levelIncrease = clearCounter/CLEARS_PER_LEVEL;
+      scoreKeeper.levelUp( levelIncrease );
+      lockDelay = Math.max(MIN_LOCK_DELAY, lockDelay - LOCK_DELAY_DECREMENT_PER_LEVEL * levelIncrease);
+      clearCounter %= CLEARS_PER_LEVEL;
     }
   }
 
-  private void dropDownRowsAt(int startRow){
+  private void dropDownRowsAt(int startRow)
+  {
     // would be much more efficient if we could
     // store the max height of the Tetris tower
     // and only loop that much    
 
-    for(int row = startRow; row >= 1; row--){      
-      for(int col = 0; col < WIDTH; col++){
+    for(int row = startRow; row >= 1; row--)
+    {
+      for(int col = 0; col < WIDTH; col++)
+      {
         grid[row][col] = grid[row - 1][col];
 
         Block movedBlock = grid[row][col];
-        if(movedBlock != null){
+        if(movedBlock != null)
+        {
           movedBlock.setPosition( movedBlock.getX(), movedBlock.getY() + Board.BLOCK_SIZE );
         }
       }
@@ -303,23 +321,29 @@ public class Board
    * @param gc Game Container.
    * @param dt Time interval.
    */
-  public void update(GameContainer gc, int dt){
+  public void update(GameContainer gc, int dt)
+  {
     updateTicker(gc, dt);
   }
 
-  private void updateTicker(GameContainer gc, int dt){
+  private void updateTicker(GameContainer gc, int dt)
+  {
     lockCounter += dt;
-    if(lockCounter >= lockDelay){
+    if(lockCounter >= lockDelay)
+    {
       lockCounter = 0;
       tick(gc);
     }    
   }
     
-  private void tick(GameContainer gc){
-    if(debugMode){
+  private void tick(GameContainer gc)
+  {
+    if(debugMode)
+    {
       System.out.println("Tick!");
     }
-    if(isDefeat){
+    if(isDefeat)
+    {
       return;
     }
     if(currentTetro == null)
@@ -416,10 +440,13 @@ public class Board
   {
     nextTetro.render(gc, g);
 
-    for(int row = HEIGHT_WAITING; row < HEIGHT; row++){
-      for(int col = 0; col < WIDTH; col++){
+    for(int row = HEIGHT_WAITING; row < HEIGHT; row++)
+    {
+      for(int col = 0; col < WIDTH; col++)
+      {
         Block blockToRender = grid[row][col];
-        if(blockToRender != null){
+        if(blockToRender != null)
+        {
           blockToRender.render(gc, g);
         }
       }
@@ -463,7 +490,8 @@ public class Board
     moveDownWithoutCheck(currentTetro);
   }
 
-  private void moveDownWithoutCheck(Tetromino tetromino){
+  private void moveDownWithoutCheck(Tetromino tetromino)
+  {
     
     for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
     {
@@ -484,8 +512,10 @@ public class Board
   /**
    * While can still move down, do move down.
    */
-  public void hardDrop(){
-    while(canMoveDown()){
+  public void hardDrop()
+  {
+    while(canMoveDown())
+    {
       moveDownWithoutCheck();
     }
     lockCounter = 0;
@@ -510,8 +540,10 @@ public class Board
     return canMoveDown(currentTetro);
   }
 
-  private boolean canMoveDown(Tetromino tetromino){
-    if(tetromino == null){
+  private boolean canMoveDown(Tetromino tetromino)
+  {
+    if(tetromino == null)
+    {
       return false;
     }
 
