@@ -10,7 +10,10 @@ import org.newdawn.slick.SlickException;
  * 
  * @author Daniel Rolandi
  */
-public class TetrominoInfo {
+public class TetrominoInfo {    
+  
+  public static final int BLOCK_COUNT = 4;
+  public static final int TYPE_COUNT = TetrominoType.values().length;
   
   private static final Color Icolor = new Color(0, 255, 255);
   private static final Color Zcolor = new Color(255, 0, 0);

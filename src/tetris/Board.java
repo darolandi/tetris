@@ -19,7 +19,8 @@ import java.util.Collections;
  *
  * @author Daniel Rolandi
  */
-public class Board {
+public class Board 
+{
   public static final int WIDTH = 10;
   public static final int HEIGHT = 26; // includes Waiting Room
   public static final int HEIGHT_WAITING = 6; // Waiting Room height
@@ -34,11 +35,17 @@ public class Board {
   public static final float NEXT_TETRO_SIZE = NEXT_TETRO_PIXELS * BLOCK_SIZE;
   private static final Color NEXT_TETRO_BACKGROUND = GAME_BACKGROUND;
   private static final Color NEXT_TETRO_BORDER = GAME_BORDER;
+  
   private static final Music bgm;
-  static{
-    try{
-      bgm = new Music("music/Tetris.ogg");
-    }catch(SlickException e){
+  private static final int DEFAULT_MUSIC_VOLUME = 0; // should be 0 or 1
+  static
+  {
+    try
+    {
+      bgm = new Music("music/Tetris.ogg");      
+    }
+    catch(SlickException e)
+    {
       throw new IllegalStateException("Could not load music.");
     }
   }
@@ -70,9 +77,11 @@ public class Board {
    *
    * @param gc Game Container.
    */
-  public Board(GameContainer gc){    
+  public Board(GameContainer gc)
+  {    
     bgm.loop();
-    musicVolume = 1;
+    musicVolume = DEFAULT_MUSIC_VOLUME;
+    bgm.setVolume( DEFAULT_MUSIC_VOLUME );
     setupControl(gc);
     newGame();
     defeat();
@@ -81,11 +90,13 @@ public class Board {
   /**
    * Forces game over at this exact movement.
    */
-  public void endGame(){
+  public void endGame()
+  {
     defeat();
   }
 
-  private void setupControl(GameContainer gc){
+  private void setupControl(GameContainer gc)
+  {
     Input input = gc.getInput();
     input.enableKeyRepeat();
     InputProvider provider = new InputProvider( input );
@@ -110,7 +121,8 @@ public class Board {
   /**
    * Starts a fresh, new game.
    */
-  public final void newGame(){
+  public final void newGame()
+  {
     grid = new Block[HEIGHT][WIDTH];
     lockDelay = BASE_LOCK_DELAY;
     lockCounter = 0;    
@@ -123,7 +135,8 @@ public class Board {
     selectNextTetro();
   }
 
-  private void spawnTetromino(){
+  private void spawnTetromino()
+  {
     currentTetro = nextTetro;
     moveNewTetromino();
     summonGhostTetromino(0);
@@ -133,7 +146,8 @@ public class Board {
   /**
    * Wipes all Blocks at Ghost Tetro's position.
    */
-  public void killGhostTetro(){
+  public void killGhostTetro()
+  {
     if(ghostTetro != null){
       ghostTetro.kill(grid);
       ghostTetro = null;
@@ -141,7 +155,8 @@ public class Board {
   }
 
   // PRECONDITION: currentTetro pointing to new Tetromino
-  private void moveNewTetromino(){
+  private void moveNewTetromino()
+  {
     currentTetro.moveToSpawn(grid);
   }
 
@@ -150,7 +165,8 @@ public class Board {
    *
    * @param state Orientation state of Tetromino.
    */
-  public void summonGhostTetromino(int state){
+  public void summonGhostTetromino(int state)
+  {
     ghostTetro = new Tetromino( currentTetro.getType(),
             currentTetro.getX(),
             currentTetro.getY(),
@@ -171,38 +187,47 @@ public class Board {
             false);
   }
 
-  private TetrominoType getNextTetroType(){
-    if( nextTypes.isEmpty() ){
+  private TetrominoType getNextTetroType()
+  {
+    if( nextTypes.isEmpty() )
+    {
       refillNextTypes();
     }
     return nextTypes.removeLast();
   }
 
-  private void refillNextTypes(){
+  private void refillNextTypes()
+  {
     ArrayList<TetrominoType> newBag = new ArrayList<>(7);
     newBag.addAll(Arrays.asList(TetrominoType.values()));
     Collections.shuffle(newBag);
-    for(TetrominoType type : newBag){
+    for(TetrominoType type : newBag)
+    {
       nextTypes.addLast(type);
     }
   }
 
   // current playing Tetromino reaches stop
-  private void thud(){
+  private void thud()
+  {
     checkDefeat();
-    if(isDefeat){
+    if(isDefeat)
+    {
       return;
     }
     attemptClearRows();
     spawnTetromino();
   }
 
-  private void checkDefeat(){
+  private void checkDefeat()
+  {
     Block tempBlock;
     // defeat happens if any non-ghost Block crosses into the Waiting Room
-    for(int col = 0; col < WIDTH; col++){
+    for(int col = 0; col < WIDTH; col++)
+    {
       tempBlock = grid[HEIGHT_WAITING - 1][col];
-      if(tempBlock != null && !(tempBlock instanceof GhostBlock) ){
+      if(tempBlock != null && !(tempBlock instanceof GhostBlock) )
+      {
         defeat();
         break;
       }
@@ -625,29 +650,25 @@ public class Board {
   /**
    * Move the Tetromino to the right.
    */
-  public void moveRight(){
-    if(! canMoveRight()){
+  public void moveRight()
+  {
+    if(! canMoveRight())
+    {
       return;
     }
 
-    Block tempBlock = currentTetro.getBlock(0);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = currentTetro.getBlock(1);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = currentTetro.getBlock(2);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-    tempBlock = currentTetro.getBlock(3);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
-
-    tempBlock = currentTetro.getBlock(0);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
-    tempBlock = currentTetro.getBlock(1);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
-    tempBlock = currentTetro.getBlock(2);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
-    tempBlock = currentTetro.getBlock(3);
-    grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
-
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = currentTetro.getBlock( blockIndex );
+      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() ] = null;
+    }
+    
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = currentTetro.getBlock( blockIndex );
+      grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ] = tempBlock;
+    }
+      
     currentTetro.moveRight();
     killGhostTetro();
     summonGhostTetromino(currentTetro.getState());
@@ -658,51 +679,27 @@ public class Board {
    * Returns true if current Tetromino can move right by 1 step.
    * @return True if current Tetromino can move right by 1 step.
    */
-  public boolean canMoveRight(){
-    if(currentTetro == null){
+  public boolean canMoveRight()
+  {
+    if(currentTetro == null)
+    {
       return false;
     }
-
-    // loop unrolling for performance
-    Block tempBlock = currentTetro.getBlock(0);
-    int targetCol = (int)tempBlock.getGridX() +1;
-    if(targetCol >= WIDTH){
-      return false;
-    }
-    Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = currentTetro.getBlock(1);
-    targetCol = (int)tempBlock.getGridX() +1;
-    if(targetCol >= WIDTH){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = currentTetro.getBlock(2);
-    targetCol = (int)tempBlock.getGridX() +1;
-    if(targetCol >= WIDTH){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
-
-    tempBlock = currentTetro.getBlock(3);
-    targetCol = (int)tempBlock.getGridX() +1;
-    if(targetCol >= WIDTH){
-      return false;
-    }
-    targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
-    if( unpathableBlock(targetBlock) ){
-      return false;
-    }
+        
+    for(int blockIndex = 0; blockIndex < TetrominoInfo.BLOCK_COUNT; blockIndex++)
+    {
+      Block tempBlock = currentTetro.getBlock(blockIndex);
+      int targetCol = (int)tempBlock.getGridX() +1;
+      if(targetCol >= WIDTH)
+      {
+        return false;
+      }
+      Block targetBlock = grid[ (int)tempBlock.getGridY() ][ (int)tempBlock.getGridX() +1 ];
+      if( unpathableBlock(targetBlock) )
+      {
+        return false;
+      }
+    }    
 
     return true;
   }
@@ -711,8 +708,10 @@ public class Board {
    * Rotates the Tetromino counter-clockwise.
    * Tetromino deals with the collision checking.
    */
-  public void rotateLeft(){
-    if(currentTetro != null){
+  public void rotateLeft()
+  {
+    if(currentTetro != null)
+    {
       currentTetro.rotateLeft(grid, this);
     }
   }
@@ -721,8 +720,10 @@ public class Board {
    * Rotates the Tetromino clockwise.
    * Tetromino deals with the collision checking.
    */
-  public void rotateRight(){
-    if(currentTetro != null){
+  public void rotateRight()
+  {
+    if(currentTetro != null)
+    {
       currentTetro.rotateRight(grid, this);
     }
   }
@@ -730,10 +731,13 @@ public class Board {
   /**
    * Dumps the contents of the grid for debugging.
    */
-  public void dumpGrid(){
-    for(int row = 0; row < HEIGHT; row++){
+  public void dumpGrid()
+  {
+    for(int row = 0; row < HEIGHT; row++)
+    {
       System.out.print(row + "\t");
-      for(int col= 0; col < WIDTH;col++){
+      for(int col= 0; col < WIDTH;col++)
+      {
         System.out.print( ( grid[row][col] == null) ? "0" : "#" );
       }
       System.out.println();
@@ -743,7 +747,8 @@ public class Board {
   /**
    * Toggle mute/unmute bgm.
    */
-  public void toggleMusic(){
+  public void toggleMusic()
+  {
     musicVolume ^= 1;
     bgm.setVolume( musicVolume );
   }
